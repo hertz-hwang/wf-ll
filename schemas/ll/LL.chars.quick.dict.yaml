@@ -227,7 +227,7 @@ encoder:
 倏	.jw
 驅	.ko
 互	.kr
-𰅌	.ku
+𱹅	.ku
 边	.kw
 𬦛	.lo
 豕	.lr
@@ -244,7 +244,7 @@ encoder:
 于	.o
 頸	.po
 騙	.pr
-𲌖	.pu
+𗷮	.pu
 慕	.pw
 辟	.qo
 瓯	.qr
@@ -378,15 +378,15 @@ encoder:
 欢	/zu
 示	/zw
 𡭓	;,o
-𨺅	;,r
-𰚒	;,u
+𡆹	;,r
+𫒺	;,u
 族	;,w
 囸	;.o
 毛	;.r
 卺	;.u
 糟	;.w
 占	;/o
-𠣼	;/r
+𘭿	;/r
 圈	;/u
 奈	;/w
 书	;;o
@@ -421,7 +421,7 @@ encoder:
 系	;hr
 乙	;hu
 觇	;hw
-甪	;jo
+奓	;jo
 百	;jr
 图	;ju
 夷	;jw
@@ -461,7 +461,7 @@ encoder:
 施	;tw
 么	;u
 敢	;vo
-㲐	;vr
+𘥄	;vr
 司	;vu
 直	;vw
 大	;w
@@ -656,7 +656,7 @@ encoder:
 床	bsu
 音	bsw
 底	bto
-犝	btr
+𨵟	btr
 庶	btu
 遮	btw
 及	bu
@@ -671,7 +671,7 @@ encoder:
 造	bxw
 康	byo
 句	byr
-𤙽	byu
+𫸀	byu
 庸	byw
 兴	bzo
 凯	bzr
@@ -829,7 +829,7 @@ encoder:
 缘	dkr
 夬	dku
 给	dkw
-𬘧	dlo
+𰬅	dlo
 太	dlr
 缏	dlu
 线	dlw
@@ -897,7 +897,7 @@ encoder:
 戈	far
 雄	fau
 墼	faw
-剸	fbo
+專	fbo
 𱌮	fbr
 龙	fbu
 骞	fbw
@@ -1266,7 +1266,7 @@ encoder:
 螅	jvw
 里	jw
 否	jxo
-耖	jxr
+䖢	jxr
 强	jxu
 犟	jxw
 蠛	jyo
@@ -1405,7 +1405,7 @@ encoder:
 倾	lcr
 信	lcu
 僧	lcw
-伻	ldo
+偁	ldo
 俘	ldr
 條	ldu
 作	ldw
@@ -1735,7 +1735,7 @@ encoder:
 斯	plw
 愉	pmo
 房	pmr
-𢚽	pmu
+𢛞	pmu
 愿	pmw
 周	pno
 亮	pnr
@@ -1794,7 +1794,7 @@ encoder:
 束	q;u
 琦	q;w
 斑	qao
-㺭	qar
+畯	qar
 玟	qau
 現	qaw
 衣	qbo
@@ -2002,7 +2002,7 @@ encoder:
 岛	tbu
 脏	tbw
 秦	tco
-𤎎	tcr
+煫	tcr
 脱	tcu
 脂	tcw
 胳	tdo
@@ -2014,7 +2014,7 @@ encoder:
 烧	tfu
 煥	tfw
 胖	tgo
-𱫉	tgr
+烶	tgr
 胜	tgu
 肢	tgw
 奏	tho
@@ -2383,11 +2383,11 @@ encoder:
 背	z,w
 𱀌	z.o
 陋	z.r
-䖎	z.u
+𪞆	z.u
 陡	z.w
 除	z/o
 阡	z/r
-𬯉	z/u
+𨺪	z/u
 际	z/w
 皋	z;o
 入	z;r
@@ -2396,7 +2396,7 @@ encoder:
 陈	zao
 𬯢	zar
 阶	zau
-𨹆	zaw
+䧋	zaw
 导	zbo
 繁	zbr
 每	zbu

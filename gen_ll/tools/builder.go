@@ -197,12 +197,12 @@ func calcFullCodeByDiv(div []string, mappings map[string]string) (full string, c
 		// 第二码：第二部件大码
 		code += secondCompCode[:1]
 		
-		// 第三码：第一部件中码
-		if len(firstCompCode) >= 2 {
-			code += firstCompCode[1:2]
+		// 第三码：第二部件中码
+		if len(secondCompCode) >= 2 {
+			code += secondCompCode[1:2]
 		} else {
 			// 如果只有1码，重复大码
-			code += firstCompCode[:1]
+			code += secondCompCode[:1]
 		}
 		
 		// 第四码：第二部件小码
