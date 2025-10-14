@@ -62,9 +62,9 @@ wf-ll/
 ![词库分类](tools/assets/离乱词库分类.png)
 
 词库按使用频率和场景进行分类管理，包括：
-- [玲珑词库](https://github.com/hanzi-chai/DictLinglong)
-- 自定义短语：`LL_custom_phrases.txt`
-- `jieba` 分词超大词库（后续将转为 `HanLP` 分词，分词、词频将更加精准）
+- **固顶词（不调频）**：[玲珑词库](https://github.com/hanzi-chai/DictLinglong) + 092k词库
+- **自定义短语（位于固顶词和超大词库之间，不调频）**：`LL_custom_phrases.txt`
+- **超大词库（调频但不可能排到固顶词和自定义短语前面）**：`jieba` 分词（后续将转为 `HanLP` 分词，分词、词频将更加精准）
 
 ### 4. 性能测评
 ![性能测评](tools/assets/离乱科学测评.png)
