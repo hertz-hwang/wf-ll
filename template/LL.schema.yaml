@@ -277,5 +277,5 @@ recognizer:
     reverse_lookup: "^`([qwrtyuopasdfghjklzxcvbnm,.]+?)*$"
     PY_lookup: "^`P([qwrtyuopasdfghjklzxcvbnm,.]+'?)*$"
     xtroke_lookup: "^`X([hspnz]+'?)*$"
-    roots: "][qwrtyuopasdfghjklzxcvbnm;,/]*"
+    roots: "][qwrtyuopasdfghjklzxcvbnm;,./]*"
     punct: '^\|([QWRTYUOPASDFGHJKLZXCVBNM<>qwrtyuopasdfghjklzxcvbnm,.]+)$'
