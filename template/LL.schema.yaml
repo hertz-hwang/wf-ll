@@ -84,7 +84,7 @@ engine:
 
 speller:
   alphabet: qwrtyuopasdfghjkl;'zxcvbnm,./]
-  delimiter: "`"
+  delimiter: " `"
   auto_select: true
 
 fixed:
@@ -106,6 +106,7 @@ custom_phrase: # 自定義短語
 translator:
   dictionary: *schema
   prism: *schema
+  #db_class: tabledb
   enable_completion: false
   enable_sentence: false
   enable_user_dict: true
