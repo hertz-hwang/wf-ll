@@ -276,8 +276,14 @@ func AddCandidateCodes(entries []*CitiEntry) []*CitiEntry {
 	// 处理每个编码的重码情况
 	for code, group := range codeGroups {
 		if len(group) == 1 {
-			// 没有重码，直接使用原编码
-			result[group[0].index] = group[0].entry
+			// 没有重码，为简码添加"_"后缀
+			newEntry := &CitiEntry{
+				Text:   group[0].entry.Text,
+				Code:   code + "_",
+				Freq:   group[0].entry.Freq,
+				Source: group[0].entry.Source,
+			}
+			result[group[0].index] = newEntry
 			continue
 		}
 
@@ -343,8 +349,14 @@ func AddCandidateCodesWithSimpleSorting(entries []*CitiEntry) []*CitiEntry {
 	// 处理每个编码的重码情况
 	for code, group := range codeGroups {
 		if len(group) == 1 {
-			// 没有重码，直接使用原编码
-			result = append(result, group[0])
+			// 没有重码，为简码添加"_"后缀
+			newEntry := &CitiEntry{
+				Text:   group[0].Text,
+				Code:   code + "_",
+				Freq:   group[0].Freq,
+				Source: group[0].Source,
+			}
+			result = append(result, newEntry)
 			continue
 		}
 
