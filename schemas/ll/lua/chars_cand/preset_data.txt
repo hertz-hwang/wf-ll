@@ -2050,7 +2050,7 @@ w① r② u囡 o毁	;gs
 w𱉫 r② u𤆒 o𡮅	;gt
 w𗳚 r② u糲 o㪒	;gv
 w① r𱹉 u𨾲 o𠱒	;gx
-w𥺍 r② u𰭰 o兒	;gy
+w𘴜 r② u𰭰 o兒	;gy
 w𗼾 r𗳡 u𣣉 o邾	;gz
 w觇 r系 u乙 o皱	;h
 w䊟 r㲩 u③ o④	;h,
@@ -10464,7 +10464,7 @@ w① r② u琛 o④	qgs
 w① r② u③ o④	qgt
 w① r② u𤪲 o④	qgv
 w① r② u𨿄 o裔	qgx
-w① r② u③ o④	qgy
+w① r② u③ o𬺧	qgy
 w① r𘋪 u鳜 o𘋸	qgz
 w规 r累 u鲽 o玻	qh
 w璊 r鳎 u③ o④	qh,
@@ -10753,7 +10753,7 @@ w① r𬃅 u③ o④	qxd
 w① r② u③ o𗑽	qxf
 w𢻤 r② u𗒮 o④	qxg
 w① r② u③ o㻍	qxh
-w① r𲯾 u③ o④	qxj
+w① r𲯾 u③ o𘴚	qxj
 w䢪 r② u③ o④	qxk
 w① r𬍽 u③ o④	qxl
 w① r瑽 u③ o𫦙	qxm
@@ -12504,7 +12504,7 @@ w𱴼 r② u③ o④	vtb
 w① r② u𗚮 o䰤	vtc
 w𭶳 r䃥 u𗜵 o④	vtd
 w① r② u③ o𥕚	vtf
-w① r𨅐 u③ o④	vtg
+w① r𨅐 u𘴝 o④	vtg
 w碈 r礯 u③ o聧	vth
 w① r𡳉 u𥕨 o𗟉	vtj
 w臋 r② u③ o𥗞	vtk
@@ -13458,7 +13458,7 @@ w𗍜 r𫝖 u䓼 o蕗	ygd
 w𬞐 r② u③ o𗿸	ygf
 w𦲔 r𦳀 u葌 o④	ygg
 w蒘 r䔝 u𗿣 o𥀥	ygh
-w𡮵 r𦲘 u葛 o④	ygj
+w𡮵 r𘴊 u葛 o④	ygj
 w𫐬 r菇 u𮏁 o④	ygk
 w𰲇 r䔈 u苊 o④	ygl
 w𦵃 r㺡 u③ o𦲒	ygm

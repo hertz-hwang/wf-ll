@@ -4294,6 +4294,7 @@ encoder:
 𘜾	.,jo
 𘝌	.,jo
 𘝍	.,jo
+𘴉	.,jo
 𧺽	.,jr
 𬠸	.,ju
 殡	.,jw
@@ -5636,6 +5637,7 @@ encoder:
 办	.dhr
 𧺍	.dhr
 𩡩	.dhr
+𬺢	.dhr
 𣅆	.dhw
 𧇋	.dhw
 𩥂	.dhw
@@ -8011,6 +8013,7 @@ encoder:
 𘫁	.vgu
 𘫖	.vgu
 𘫗	.vgu
+𘴞	.vgu
 𩧁	.vho
 𦁘	.vhr
 䩦	.vhu
@@ -8032,6 +8035,7 @@ encoder:
 𘞏	.vjo
 𘟆	.vjo
 𘬙	.vjo
+𘴖	.vjo
 𬓟	.vjo
 𬳲	.vjr
 𲲻	.vjr
@@ -17401,6 +17405,7 @@ encoder:
 𘒰	;fgu
 𘒳	;fgu
 𘒵	;fgu
+𘴕	;fgu
 𤯱	;fgu
 攲	;fgw
 㿲	;fho
@@ -17774,6 +17779,7 @@ encoder:
 𠁤	;gyo
 𣬜	;gyo
 𰭰	;gyu
+𘴜	;gyw
 𥺍	;gyw
 邾	;gzo
 郳	;gzo
@@ -17787,6 +17793,7 @@ encoder:
 𗽬	;gzo
 𘤆	;gzo
 𘤇	;gzo
+𘴙	;gzo
 𣒧	;gzo
 𪴄	;gzo
 𗳡	;gzr
@@ -19939,6 +19946,7 @@ encoder:
 𘪏	;yjo
 𱹋	;yjo
 澩	;yjr
+𘴌	;yjr
 𩱸	;yjw
 𘪑	;ykr
 𲗢	;ykr
@@ -25033,6 +25041,7 @@ encoder:
 𘗾	bbgu
 𘘈	bbgu
 𘫱	bbgu
+𘴍	bbgu
 𡽓	bbgw
 𰎿	bbgw
 𡷪	bbho
@@ -25223,6 +25232,7 @@ encoder:
 𗈜	bc.u
 𘜂	bc.u
 𤚨	bc/r
+𬺫	bc/r
 𱃑	bc/r
 骈	bc/w
 䦕	bc/w
@@ -33191,6 +33201,7 @@ encoder:
 𱶕	cn,w
 𘝚	cn.r
 𘩥	cn.r
+𘴔	cn.r
 𥅛	cn.r
 𥅜	cn.r
 𧧐	cn.r
@@ -39905,6 +39916,8 @@ encoder:
 𣈅	fh;w
 𧖮	fh;w
 𩚣	fh;w
+𬺨	fh;w
+𬺩	fh;w
 𰖲	fh;w
 䶮	fhao
 𡥋	fhar
@@ -53156,6 +53169,7 @@ encoder:
 𗶈	jggu
 𗶒	jggu
 𘩄	jggu
+𘴗	jggu
 𫶯	jggu
 𢏚	jggw
 𫶰	jggw
@@ -55349,6 +55363,7 @@ encoder:
 駡	k.mr
 𤬌	k.mr
 𦟖	k.mr
+𬺬	k.mr
 𮪁	k.mr
 𰶎	k.mr
 𦜩	k.mw
@@ -55680,6 +55695,7 @@ encoder:
 𘓜	k;jo
 𘓝	k;jo
 𘓤	k;jo
+𘴛	k;jo
 𢑗	k;jr
 𧍨	k;ju
 匲	k;ko
@@ -63055,6 +63071,7 @@ encoder:
 𤄎	mbgo
 𬈚	mbgo
 㜂	mbgu
+𘴒	mbgu
 𲪯	mbgu
 㲿	mbho
 㴸	mbho
@@ -77352,6 +77369,7 @@ encoder:
 𫯿	qb/w
 𳎢	qb/w
 𗑎	qb;r
+𘴑	qb;r
 𗐽	qb;u
 𗓄	qb;u
 𤧃	qb;w
@@ -78129,6 +78147,7 @@ encoder:
 𪻣	qgxo
 𬍣	qgxo
 𨿄	qgxu
+𬺧	qgyo
 𘋸	qgzo
 𤩬	qgzo
 𘋪	qgzr
@@ -79801,6 +79820,7 @@ encoder:
 𗒮	qxgu
 𢻤	qxgw
 㻍	qxho
+𘴚	qxjo
 𲯾	qxjr
 䢪	qxkw
 璡	qxkw
@@ -80538,6 +80558,7 @@ encoder:
 𘊱	s.cu
 𘊲	s.cu
 𘦊	s.cu
+𘴎	s.cu
 𧪔	s.cu
 𧭿	s.cu
 𣝛	s.dr
@@ -82276,6 +82297,7 @@ encoder:
 𘀼	sgcu
 𘀾	sgcu
 𘁀	sgcu
+𘴘	sgcu
 𣖅	sgcu
 㯝	sgdo
 𦌕	sgdo
@@ -82289,6 +82311,7 @@ encoder:
 𘀱	sggu
 𘀵	sggu
 𘀿	sggu
+𘴏	sggu
 𰗻	sggu
 𣒽	sggw
 𣎸	sgho
@@ -82993,6 +83016,7 @@ encoder:
 𬅂	skmw
 槠	skno
 𣑬	sknr
+𬺥	sknr
 㮒	sknw
 𭏷	sknw
 𦊈	skpu
@@ -84563,6 +84587,7 @@ encoder:
 榀	sxko
 𣖎	sxko
 𪴋	sxko
+𬺦	sxko
 𣘽	sxkr
 𣛎	sxkw
 𨗴	sxkw
@@ -86114,6 +86139,7 @@ encoder:
 𰝼	tanr
 𨟽	tapr
 𘱯	tapu
+𬺤	tapu
 𤏟	tapw
 𦠨	tapw
 𮌤	tapw
@@ -89604,6 +89630,7 @@ encoder:
 𧯆	v,xo
 𩸴	v,xo
 𫙩	v,xo
+𬺭	v,xo
 𲍀	v,xo
 𦤤	v,xu
 𧯇	v,xu
@@ -89699,6 +89726,7 @@ encoder:
 𲌾	v.du
 𗚿	v.dw
 𗜛	v.dw
+𘴐	v.dw
 𥕕	v.fo
 𩽐	v.fo
 𳎀	v.fo
@@ -91050,6 +91078,7 @@ encoder:
 𗝨	vcgu
 𗝯	vcgu
 𗝱	vcgu
+𘴓	vcgu
 𥓔	vcgu
 𭶵	vcho
 𳎐	vchr
@@ -93719,6 +93748,7 @@ encoder:
 𭶳	vtdw
 𥕚	vtfo
 𨅐	vtgr
+𘴝	vtgu
 聧	vtho
 𢃯	vtho
 𩹀	vtho
@@ -95099,6 +95129,7 @@ encoder:
 𡚀	x.;w
 𱔷	x.;w
 𫯂	x.ar
+𬺣	x.ar
 㗔	x.au
 𠵾	x.au
 𡁻	x.aw
@@ -103586,6 +103617,7 @@ encoder:
 𗿯	yggu
 𗿰	yggu
 𗿱	yggu
+𘴋	yggu
 𦲔	yggw
 𥀥	ygho
 𦫼	ygho
@@ -103597,6 +103629,7 @@ encoder:
 蒘	yghw
 𧃌	yghw
 𬝶	yghw
+𘴊	ygjr
 𦲘	ygjr
 𦷸	ygjr
 葛	ygju
@@ -105943,6 +105976,7 @@ encoder:
 䖇	ysdu
 𦭝	ysdu
 𫉼	ysdw
+𬺪	ysdw
 𰱯	ysdw
 猝	ysfo
 萃	ysfo
