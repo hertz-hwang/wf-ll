@@ -26,6 +26,6 @@ encoder:
       formula: "AaAbBaBb"
     - length_equal: 3
       formula: "AaBaCaCb"
-    - length_in_range: [4, 20]
+    - length_in_range: [4, 99]
       formula: "AaBaCaZa"
 ...

@@ -22,7 +22,7 @@ encoder:
       formula: "AaAbBaBb"
     - length_equal: 3
       formula: "AaBaCaCb"
-    - length_in_range: [4, 20]
+    - length_in_range: [4, 99]
       formula: "AaBaCaZa"
 ...
 
@@ -137196,7 +137196,7 @@ RMB玩家	qq,.
 外交内政	skf.
 校歌	skff
 李诗歌	skff
-李诗歌_20240606	skff
+李诗歌	skff
 桶装	skfh
 迟早有一天	skfh
 罚下	skfl

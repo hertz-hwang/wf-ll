@@ -22,7 +22,7 @@ encoder:
       formula: "AaAbBaBb"
     - length_equal: 3
       formula: "AaBaCaCb"
-    - length_in_range: [4, 20]
+    - length_in_range: [4, 99]
       formula: "AaBaCaZa"
 ...
 
@@ -18706,6 +18706,7 @@ T恤衫	pfx
 核试验	skb
 主要有	skf
 核计划	skf
+李诗歌	skf
 李诗歌	skf
 别说了	skg
 别哭了	skg

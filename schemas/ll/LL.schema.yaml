@@ -53,6 +53,7 @@ engine:
     - lua_processor@*ll.popping
     - speller
     - punctuator
+    - lua_processor@*ll.fixed_user*processor
     - selector
     - navigator
     - express_editor
@@ -77,9 +78,9 @@ engine:
     - history_translator@historyX
   filters: 
     - lua_filter@*ll.charset_filter
-    - lua_filter@*ll.fix_filter
     - reverse_lookup_filter@reverse_lookup
     - lua_filter@*ll.div_spelling*filter
+    - lua_filter@*ll.fixed_user*filter
     - uniquifier 
 
 speller:
@@ -170,21 +171,29 @@ historyX:
 ll:
   code: *schema
   tags: [ abc ]
-  # emoji examples: ⚡️ 👤 🔝 🔥 ✨ ⬆️ 🫵🏻 🗲 🎯 📌 💡 🌟
-  quick_code_indicator: "🌟"
-  custom_phrases_indicator: "💡"
   spelling:
     schema: *cf
     cycle_key: "Shift+Control+C"
     switch_key: "Control+c"
     phrase: 1
 
+fixed_user:
+  # emoji examples: ⚡️ 👤 🔝 🔥 ✨ ⬆️ 🫵🏻 🗲 🎯 📌 💡 🌟
+  quick_code_indicator: "🌟"
+  custom_phrases_indicator: "💡"
+  up_key: "Control+h"
+  down_key: "Control+l"
+  fix_key: "Control+t"
+  erase_key: "Control+x"
+  trigger_key: "Control+u"
+  finish_key: "Return"
+
 key_binder:
   bindings:
-    - {accept: "e", send: "A", when: has_menu}
-    - {accept: "i", send: "B", when: has_menu}
-    - {accept: "[", send: "C", when: has_menu}
-    - {accept: Tab, send: "C", when: has_menu}
+    - {accept: "e", send: "@", when: has_menu}
+    - {accept: "i", send: "#", when: has_menu}
+    - {accept: "[", send: "&", when: has_menu}
+    - {accept: Tab, send: "&", when: has_menu}
     - {accept: 1, send: "0", when: has_menu}
     - {accept: 4, send: "7", when: has_menu}
     #- {accept: "Control+Control_L", send: "8", when: has_menu}
@@ -200,7 +209,7 @@ key_binder:
 
 menu:
   alternative_select_labels: [ '_', 'e', 'i', 'T|[', '2', '3', '4|7', 'C|8', 'S|9', '1|0']
-  alternative_select_keys: "_ABC237890"
+  alternative_select_keys: "_@#&237890"
   page_size: 10
 
 punctuator:
@@ -215,17 +224,17 @@ punctuator:
     ':' : { commit: ： }
     '''': { commit: 。 }
     '"' : { pair: [ '“', '”' ] }
-    '\' : { commit: 、 }
+    #'\' : { commit: 、 }
     '|' : [ ·, ・, '|', ｜, '§', '¦', '‖' ]
     '`' : [ '`', ‵, ‶, ‷, ′, ″, ‴, ⁗ ]
     '~' : [ '~', ～, ˜, ˷, ⸯ, ≈, ≋, ≃, ≅, ≇, ∽, ⋍, ≌, ﹏, ﹋, ﹌, ︴ ]
     '!' : { commit: ！ }
-    '@' : [ '@', ©, ®, ℗ ]
-    '#' : [ '#', № ]
+    #'@' : [ '@', ©, ®, ℗ ]
+    #'#' : [ '#', № ]
     '%' : [ '%', ％, '°', '℃', ‰, ‱, ℉, ℅, ℆, ℀, ℁, ⅍ ]
     '$' : [ ￥, '$', '€', '£', '¥', '¢', '¤', ₩ ]
     '^' : { commit: …… }
-    '&' : '&'
+    #'&' : '&'
     '*' : [ '*', ＊, ·, ・, ×, ※, ❂, ⁂, ☮, ☯, ☣ ]
     '(' : （
     ')' : ）
@@ -233,8 +242,12 @@ punctuator:
     '_' : ——
     '+' : '+'
     '=' : [ '=', 々, 〃 ]
-    '[' : [ 「, 【, 〔, ［, 〚, 〘 ]
-    ']' : [ 」, 】, 〕, ］, 〛, 〙 ]
+    #'[' : []
+    #']' : []
+    #'[' : { commit: 【 }
+    '[' : [ 【, 「, 〔, ［, 〚, 〘 ]
+    #']' : { commit: 】 }
+    ']' : [ 】, 」, 〕, ］, 〛, 〙 ]
     '{' : [ 『, 〖, ｛ ]
     '}' : [ 』, 〗, ｝ ]
   full_shape:

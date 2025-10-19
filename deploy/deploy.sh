@@ -108,6 +108,8 @@ gen_schema() {
     log "准备生成Rime方案..."
     rsync -a --exclude='/code_*.txt' \
         --exclude='/玲珑.txt' \
+        --exclude='/大竹_*.txt' \
+        --exclude='/跟打词提.txt' \
         --exclude='/linglong_*.txt' \
         --exclude='/div_ll.txt' \
         --exclude='/freq.txt' \
