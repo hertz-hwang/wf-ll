@@ -2451,7 +2451,6 @@ encoder:
 实心	,dmc
 实在没有	,dmf
 守旧派	,dmg
-960万平方公里	,dmj
 客流	,dml
 额济	,dml
 实在没办法	,dmm
@@ -5489,7 +5488,6 @@ encoder:
 立木南门	,sfd
 商业片儿	,sfg
 预装	,sfh
-*坐标更常用	,sfj
 航运	,sfk
 商业片	,sfk
 预卜	,sfk
@@ -7062,7 +7060,6 @@ encoder:
 一般不要	.,jk
 一字不识	.,jk
 刀丛里的诗	.,jk
-*一般用「量身定做」	.,jl
 一字不漏	.,jm
 正准备	.,jq
 一客不烦二主	.,js
@@ -17047,6 +17044,7 @@ encoder:
 叙州	/cpp
 金玉其外	/cps
 难眠之夜	/cps
+简单鹤	/cpx
 金玉其外，败絮其中	/cpy
 难言之隐	/cpz
 余势	/cq.
@@ -17676,7 +17674,6 @@ encoder:
 会址	/fnm
 对内搞活	/fnm
 会员	/fnn
-QQ会员	/fnn
 会搞	/fnp
 会打	/fnq
 又或者是	/fnv
@@ -19485,7 +19482,6 @@ QQ会员	/fnn
 型钢	/map
 签收	/mav
 开心钥匙	/mav
-T型台	/max
 舍命相救	/may
 养牛	/mb,
 瘀青	/mb,
@@ -19799,7 +19795,6 @@ T型台	/max
 圣经	/nd/
 等级	/ndb
 圣级	/ndb
-QQ等级	/ndb
 桑塔纳	/ndf
 全接触	/ndj
 等线	/ndl
@@ -26766,6 +26761,7 @@ QQ等级	/ndb
 舆论引导	;kjz
 大早上的	;kjz
 米粟	;kk;
+固词	;kk;
 达西	;kka
 我要说	;kkc
 米肉	;kkc
@@ -29578,7 +29574,6 @@ QQ等级	/ndb
 回复	;xzh
 回队	;xzh
 大呼隆	;xzj
-*系电光石火之误用	;xzj
 点到为止	;xzm
 回防	;xzm
 直到永远	;xzq
@@ -31954,7 +31949,6 @@ QQ等级	/ndb
 七青八黄	abdh
 穿过去	abdj
 射线	abdl
-X射线	abdl
 γ射线	abdl
 射在	abdn
 镀在	abdn
@@ -32912,7 +32906,6 @@ X射线	abdl
 镢头	agd;
 空间	agdh
 七足八手	agdh
-QQ空间	agdh
 铁路线	agdl
 空阔	agdm
 空翻	agdq
@@ -40112,7 +40105,6 @@ QQ空间	agdh
 马鹿	bj;f
 母上大人	bj;h
 马达	bj;k
-*应用糅合	bj;k
 废料	bj;l
 亲善大使	bj;l
 马粪	bj;t
@@ -40440,7 +40432,6 @@ QQ空间	agdh
 马嘶	bjxp
 马面裙	bjxp
 马祖	bjxs
-*应用神祇	bjxx
 够吃	bjxz
 非不得已	bjxz
 牧羊犬	bjya
@@ -42087,7 +42078,6 @@ QQ空间	agdh
 新鲜感	bqnv
 马王堆	bqnx
 表情	bqpb
-QQ表情	bqpb
 非理性	bqpg
 骄慢	bqph
 廉州	bqpp
@@ -42292,7 +42282,6 @@ QQ表情	bqpb
 学术论坛	bskn
 音调	bskp
 音乐	bskt
-QQ音乐	bskt
 音效	bskv
 音读	bskx
 特别要求	bsky
@@ -43401,7 +43390,6 @@ QQ音乐	bskt
 兴山	bzbd
 新郎新娘	bzbg
 母马	bzbj
-*应为「巅峰」之误用	bzbj
 帮过	bzbk
 康复新液	bzbm
 凯特	bzbn
@@ -45779,6 +45767,7 @@ QQ音乐	bskt
 睡眼朦胧	cctt
 稀稀疏疏	cctt
 茫茫然	ccty
+魔然	ccty
 目眦欲裂	ccv.
 睚眦欲裂	ccv.
 兑取	ccv/
@@ -50962,7 +50951,6 @@ QQ音乐	bskt
 输入法平台	czma
 输入法	czmd
 乘法	czmd
-QQ输入法	czmd
 乘波	czmh
 言为心声	czmh
 目光涣散	czmh
@@ -60289,6 +60277,7 @@ QQ输入法	czmd
 下表所示	fbv/
 龙尾	fbv;
 龙首	fbva
+龙码	fbvb
 下岗职工	fbvg
 毕竟是	fbvj
 龙息	fbvm
@@ -64631,7 +64620,6 @@ QQ输入法	czmd
 楚歌	ftff
 血脉贲张	ftfj
 有胆有识	ftfk
-*左膀右臂之讹词	ftfk
 灰云	ftfm
 动脉血	ftfq
 灰浆	ftfs
@@ -68306,7 +68294,6 @@ QQ输入法	czmd
 遁词	gfk;
 跪谢	gfka
 好比说	gfkc
-11路公交车	gfkc
 跪迎	gfkl
 生公说法	gfkm
 质谱	gfkq
@@ -69630,8 +69617,6 @@ QQ输入法	czmd
 厚古薄今	gkcv
 工程	gkcx
 违和	gkcx
-211工程	gkcx
-985工程	gkcx
 工种	gkcy
 工头	gkd;
 工间	gkdh
@@ -71591,7 +71576,6 @@ QQ输入法	czmd
 女侍	gsln
 姐俩	gslq
 女优	gslz
-AV女优	gslz
 项梁	gsm.
 历尽沧桑	gsm/
 返朴归真	gsm;
@@ -72476,7 +72460,6 @@ AV女优	gslz
 奶嘴	gyxg
 工艺品	gyxk
 奶品	gyxk
-*此乃褫夺之误	gyxk
 儿呀	gyxl
 儿啊	gyxz
 奸猾	gyy,
@@ -74297,7 +74280,6 @@ AV女优	gslz
 时代	hblj
 显山露水	hblj
 旷代	hblj
-IT时代	hblj
 时近	hblk
 暗黑	hblm
 晴雨	hblp
@@ -79652,11 +79634,6 @@ IT时代	hblj
 世间	hydh
 世态	hydm
 世纪	hydz
-21世纪	hydz
-20世纪	hydz
-19世纪	hydz
-18世纪	hydz
-15世纪	hydz
 鞠育	hyf,
 天若有情天亦老，人间正道是沧桑	hyf/
 看菜下饭	hyfc
@@ -81731,7 +81708,6 @@ IT时代	hblj
 不需	jalq
 不住	jals
 不休	jals
-hold不住	jals
 不低	jalt
 不俗	jalv
 不雅	jalx
@@ -83171,7 +83147,6 @@ hold不住	jals
 还有可能	jffa
 不可久留	jffa
 上下左右	jfff
-*用「尔」更好	jffg
 不可比	jffj
 卡片	jffk
 不可或缺	jffk
@@ -84180,7 +84155,6 @@ hold不住	jals
 还不够多	jjbj
 量表	jjbq
 还不够格	jjbs
-*多用特立独行	jjbv
 量瓶	jjc/
 不善言谈	jjck
 蜗轮	jjcm
@@ -84258,7 +84232,6 @@ hold不住	jals
 不用看了	jjhg
 多面手	jjhk
 不多见	jjhl
-*多用戛然而止	jjhm
 强弱易势	jjhq
 不二人选	jjht
 螳螂黄雀	jjht
@@ -84457,7 +84430,6 @@ hold不住	jals
 蜂鸣	jjxt
 多多少少	jjxx
 差不到哪	jjxx
-*多用叱咤	jjxx
 用不到的	jjxz
 不强求	jjyc
 蝼蚁尚且偷生	jjyg
@@ -85080,7 +85052,6 @@ hold不住	jals
 不住了	jlgh
 发紫	jlgh
 发作了	jlgh
-hold不住了	jlgh
 多做些	jlgj
 发生	jlgl
 发足	jlgp
@@ -87477,6 +87448,7 @@ hold不住了	jlgh
 不自然的	jvtz
 不确定	jvv,
 张码	jvvb
+不定长	jvvd
 不是所有	jvvf
 发展道路	jvvg
 水刷石	jvvg
@@ -90096,7 +90068,6 @@ hold不住了	jlgh
 说了	kcgh
 说些	kcgj
 谎言重复一千遍	kcgp
-*谎言重复一千遍，就会成为真理	kcgq
 谎言重复一千遍，就会成为真理	kcgq
 谎言重复一千次，就会成为真理	kcgq
 说项	kcgs
@@ -90648,7 +90619,6 @@ hold不住了	jlgh
 诫勉	kffk
 民运	kffk
 计划	kffm
-863计划	kffm
 计划内	kffn
 胡塞尔	kfft
 民妇	kfg/
@@ -90656,7 +90626,6 @@ hold不住了	jlgh
 计划生育	kfgf
 计重	kfgj
 民工	kfgk
-IT民工	kfgk
 民生	kfgl
 计生	kfgl
 民女	kfgs
@@ -91711,7 +91680,6 @@ IT民工	kfgk
 话说回来	kk;b
 交通大学	kk;b
 设计图	kk;j
-*诌议系刍议之误用	kk;j
 通达	kk;k
 谏议大夫	kk;q
 居民点	kk;t
@@ -92116,7 +92084,6 @@ IT民工	kfgk
 通体透明	klch
 请假单	klcj
 语言	klcq
-C语言	klcq
 故作轻松	klcs
 语种	klcy
 迎头	kld;
@@ -93793,7 +93760,6 @@ C语言	klcq
 交足	kvgp
 敷衍了事	kvgv
 交易	kvh.
-PY交易	kvh.
 交款	kvh/
 说破天	kvha
 议事日程	kvhc
@@ -95123,7 +95089,6 @@ PY交易	kvh.
 侧边	l/.k
 佛印	l/.l
 侵越	l/.n
-092五笔正规闲聊群	l/.p
 偏向虎山行	l/.v
 侧架	l/.x
 雪豹	l/.y
@@ -100098,9 +100063,6 @@ PY交易	kvh.
 露出笑容	lq/,
 代理费	lq//
 五笔	lq/;
-092五笔	lq/;
-09五笔	lq/;
-QQ五笔	lq/;
 齐王舍牛	lq/b
 侨眷	lq/c
 五个	lq/d
@@ -100379,7 +100341,6 @@ QQ五笔	lq/;
 雷石	lqvg
 霸王硬上弓	lqvj
 倒无所谓	lqvk
-C位出道	lqvk
 五邑	lqvl
 体前屈	lqvq
 侨联	lqvt
@@ -105559,8 +105520,6 @@ C位出道	lqvk
 没有什么	mfl;
 没有什么关系	mfl;
 染色体	mflh
-Y染色体	mflh
-X染色体	mflh
 没有作用	mflj
 没有什么用	mflj
 没有任何	mfll
@@ -111708,7 +111667,6 @@ X染色体	mflh
 打一枪换一个地方	n.sm
 勋业	n.sm
 打印机	n.sn
-3D打印机	n.sn
 抱枕	n.sp
 接力棒	n.st
 夙敌	n.sv
@@ -113576,7 +113534,6 @@ X染色体	mflh
 接过	ncbk
 拟制	ncbp
 拼音	ncbs
-QQ拼音	ncbs
 堪以告慰	ncbv
 接驳	ncby
 振兴	ncbz
@@ -113874,7 +113831,6 @@ QQ拼音	ncbs
 接待	ncxn
 扭转乾坤	ncxn
 接口	ncxp
-PS2接口	ncxp
 赫连勃勃	ncxx
 拟建	ncya
 接警	ncyb
@@ -117724,7 +117680,6 @@ PS2接口	ncxp
 打印	nq.l
 打残	nq.l
 扶残	nq.l
-3D打印	nq.l
 打湿	nq.s
 打包	nq.t
 打灭	nq.t
@@ -118933,8 +118888,6 @@ PS2接口	ncxp
 挡拆	ntnl
 赫哲	ntnl
 地址	ntnm
-IP地址	ntnm
-MAC地址	ntnm
 捣持	ntnn
 抵抗	ntns
 地坑	ntns
@@ -120277,7 +120230,6 @@ MAC地址	ntnm
 都加	nz.x
 邮费	nz//
 邮箱	nz/a
-QQ邮箱	nz/a
 都对	nz/b
 押对	nz/b
 都算	nz/c
@@ -121442,7 +121394,6 @@ QQ邮箱	nz/a
 恨铁不成钢	paja
 原子弹	pajc
 君子不立危墙之下	pajf
-*原文用尔	pajf
 君子不夺人所好	pajg
 君子不器	pajk
 斟酌用词	pajk
@@ -121538,7 +121489,6 @@ QQ邮箱	nz/a
 享福	paxv
 惨苦	payk
 高收入	paz;
-*原文为「尔」	pazf
 享年	pazn
 同台竞技	pazn
 户限	pazp
@@ -122622,7 +122572,6 @@ QQ邮箱	nz/a
 之至	pfxc
 悼唁	pfxc
 恤衫	pfxd
-T恤衫	pfxd
 之德	pfxf
 之味	pfxg
 周公吐哺，天下归心	pfxm
@@ -123535,7 +123484,6 @@ T恤衫	pfxd
 退岗	pkbp
 勘误表	pkbq
 退席	pkbv
-*原词应为明日黄花	pkby
 退气	pkc,
 冤气	pkc,
 退税	pkcc
@@ -123720,7 +123668,6 @@ T恤衫	pfxd
 巡防	pkzm
 退防	pkzm
 退后	pkzx
-*原诗为「侯门一入」	pkzz
 即成	pl,f
 悟净	pl,f
 斯密	pl,m
@@ -127984,7 +127931,6 @@ T恤衫	pfxd
 衣锦还乡	qajg
 热锅上的蚂蚁	qajj
 界面	qajk
-UI界面	qajk
 琉台不守，三韩为墟	qajn
 思想上	qajs
 无孔不入	qajz
@@ -128727,6 +128673,7 @@ UI界面	qajk
 出头鸟	qdtv
 田间小道	qdtv
 执行	qdv.
+前缀码	qdvb
 两头取利	qdvc
 班组长	qdvd
 略长	qdvd
@@ -131660,7 +131607,6 @@ UI界面	qajk
 规规矩矩	qq,,
 玩家	qq,.
 鲁鱼帝虎	qq,.
-RMB玩家	qq,.
 无规矩不成方圆	qq,;
 远远望去	qq,d
 玩成	qq,f
@@ -135653,6 +135599,7 @@ RMB玩家	qq,.
 横纹肌	sdtn
 尽先	sdtp
 尽然	sdty
+四定	sdv,
 尽行	sdv.
 尽取	sdv/
 格局	sdv;
@@ -143869,7 +143816,6 @@ RMB玩家	qq,.
 当做儿戏	tlg/
 小保姆	tlgb
 服了	tlgh
-I服了U	tlgh
 小仙女	tlgs
 爷们儿	tlgy
 月牙儿	tlgy
@@ -144715,7 +144661,6 @@ I服了U	tlgh
 小艇	tq,g
 小商	tq,g
 小冰	tq,j
-QQ小冰	tq,j
 小舟	tq,l
 烂怂	tq,m
 小船	tq,n
@@ -144911,7 +144856,6 @@ QQ小冰	tq,j
 小照	tqh.
 小时	tqhb
 腾出手来	tqhb
-24小时	tqhb
 小看	tqhc
 小人	tqhf
 烂人	tqhf
@@ -152595,7 +152539,6 @@ QQ小冰	tq,j
 事急	vy;m
 甘苦与共	vy;t
 事变	vya/
-9·18事变	vya/
 事迹	vyak
 臭钱	vyal
 礃子	vyan
@@ -152614,7 +152557,6 @@ QQ小冰	tq,j
 事态	vydm
 坚苦卓绝	vyfd
 事毕	vyff
-*「慰藉」更常用	vyfj
 帆布	vyfv
 事功	vyg.
 娶妻生子	vyga
@@ -153293,6 +153235,7 @@ QQ小冰	tq,j
 呻吟	x,xv
 嘧啶	x,xv
 嘀嗒	x,xy
+呜喵	x,xy
 神啊	x,xz
 赍赏	x,y/
 神药	x,yd
@@ -154189,7 +154132,6 @@ QQ小冰	tq,j
 裱糊匠	x;kl
 电话	x;ks
 史料记载	x;ks
-IP电话	x;ks
 少谈	x;kt
 电器	x;ky
 少许	x;kz
@@ -156837,7 +156779,6 @@ IP电话	x;ks
 呲着牙	xjln
 得住	xjls
 朝不保夕	xjls
-hold得住	xjls
 得偿	xjly
 吃不消	xjma
 到处流窜	xjma
@@ -160317,7 +160258,6 @@ hold得住	xjls
 吃屎	xzv;
 号码	xzvb
 唯才是举	xzvb
-QQ号码	xzvb
 电光石火间	xzvd
 电光石火之间	xzvd
 吃屁	xzvf
@@ -166260,7 +166200,6 @@ QQ号码	xzvb
 飙歌	yyff
 蓊蓊郁郁	yyff
 盈盈下拜	yyfh
-*「狼藉」更常用	yyfj
 获免	yyfk
 苦中有乐	yyfk
 顿顿有肉	yyfk
@@ -167537,6 +167476,7 @@ QQ号码	xzvb
 三月	z/tn
 除尘	z/tn
 三册	z/tq
+三定	z/v,
 三码	z/vb
 三层	z/vf
 三是	z/vj
@@ -170689,7 +170629,6 @@ QQ号码	xzvb
 尤伯杯	zlsj
 产业	zlsm
 产检	zlsm
-IT产业	zlsm
 白俄罗斯	zlsp
 附页	zlst
 附送	zltk
@@ -173082,7 +173021,6 @@ IT产业	zlsm
 甲午战争	zz;f
 朗朗书声	zz;h
 陷入困境	zz;n
-49年入国军	zz;p
 陪我	zz;s
 阴阳相隔	zzaz
 兀兀穷年	zzaz

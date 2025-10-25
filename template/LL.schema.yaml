@@ -17,9 +17,6 @@ schema:
     ` 键拼音反查，e在「,」，i在「.」。symbols符号输入同理。
 
 switches:
-  - name: buffered
-    states: [结束造词, 开始造词]
-    reset: 0
   - name: charset_filter
     states: [ 大字集, 常用字 ]
     reset: 1
@@ -205,7 +202,6 @@ key_binder:
     - {accept: 4, send: "7", when: has_menu}
     #- {accept: "Control+Control_L", send: "8", when: has_menu}
     - {accept: "Shift+Shift_L", send: "9", when: has_menu}
-    - {accept: i, toggle: buffered, when: always}
     #- {accept: "Control+k", send: "Shift+Delete", when: has_menu}
     - {accept: "5", toggle: charset_filter, when: has_menu}
     - {accept: minus, send: Page_Up, when: has_menu}
@@ -215,7 +211,7 @@ key_binder:
     - {accept: "Control+Shift+N", toggle: ascii_mode, when: always}
 
 menu:
-  alternative_select_labels: [ '_', 'e', 'i', 'T|[', '2', '3', '4|7', 'C|8', 'S|9', '1|0']
+  alternative_select_labels: [ '_', 'e', 'i', '⇥', '2', '3', '7', '8', '9', '0']
   alternative_select_keys: "_@#&237890"
   page_size: 10
 

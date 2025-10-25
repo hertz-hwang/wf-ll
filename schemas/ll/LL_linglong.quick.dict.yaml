@@ -2257,6 +2257,7 @@ encoder:
 飞利浦	/cm
 示范性	/cp
 简言之	/cp
+简单鹤	/cp
 简单化	/cq
 开眼界	/cq
 金香鲍	/cq
@@ -2595,7 +2596,6 @@ encoder:
 对没错	/ma
 疯婆子	/ma
 开心熊	/ma
-T型台	/ma
 灵活度	/mb
 全封闭	/md
 又没有	/mf
@@ -4347,7 +4347,6 @@ T型台	/ma
 醒过来	abb
 巴马科	abc
 穿过去	abd
-X射线	abd
 γ射线	abd
 留学生	abg
 错过了	abg
@@ -12207,6 +12206,7 @@ X射线	abd
 不确定	jvv
 不碍事	jvv
 水刷石	jvv
+不定长	jvv
 不是很	jvx
 发展到	jvx
 发展史	jvx
@@ -12892,7 +12892,6 @@ X射线	abd
 民俗学	klb
 合作制	klb
 请假单	klc
-C语言	klc
 让位给	kld
 古近纪	kld
 记住了	klg
@@ -16804,7 +16803,6 @@ C语言	klc
 原动机	pfs
 高血脂	pft
 同林鸟	pft
-T恤衫	pfx
 原有的	pfz
 之内的	pfz
 既有的	pfz
