@@ -303,6 +303,7 @@ local function BlockUserDbUpdate(db, word, code)
     t = string.match(v, "t=(%d)")
   end
   db:update(db_key, string.format("c=1 d=1 t=%d", t + 1))
+  db:flush()  -- 立即刷新到磁盘
 end
 
 ---@param db UserDb
@@ -753,35 +754,52 @@ function fixed_user_processor.func(key_event, env)
       context.composition:toSegmentation():back().prompt = "重载"
     end
     return snow.kAccepted
-  elseif not key_event:release() and snow.current(context) and snow.current(context):sub(1, #env.add_word_prefix) == env.add_word_prefix then
-    local operation = {
-      ["BackSpace"] = true,
-      ["Escape"] = true
-    }
-    if env.alphabet[keyChar] then
-      context:push_input(keyChar)
-    end
-    if operation[keyName] then
-      return snow.kNoop
-    end
-    if keyName ~= "space" then
-      return snow.kAccepted
-    end
+  -- 先输入编码，再输入 add_word_prefix 来进入加词模式
+  elseif not key_event:release() and snow.current(context) then
     local input = snow.current(context)
     if not input then
+      return snow.kNoop
+    end
+    
+    -- 检查是否以 add_word_prefix 结尾
+    local prefix_len = #env.add_word_prefix
+    if #input > prefix_len and input:sub(-prefix_len) == env.add_word_prefix then
+      local code = input:sub(1, -prefix_len - 1)  -- 获取前缀前的编码部分
+      
+      -- 设置操作，允许 BackSpace 和 Escape
+      local operation = {
+        ["BackSpace"] = true,
+        ["Escape"] = true
+      }
+      
+      if env.alphabet[keyChar] then
+        context:push_input(keyChar)
+      end
+      if operation[keyName] then
+        return snow.kNoop
+      end
+      if keyName ~= "space" then
+        return snow.kAccepted
+      end
+      
+      -- 按空格确认加词
+      context:set_property("code_add", code)
+      context:clear()
+      seg.prompt = string.format("正在加词到 %s，请输入词语", code)
       return snow.kAccepted
     end
-    local code = input:sub(#env.add_word_prefix + 1)
-    context:set_property("code_add", code)
-    context:clear()
-    return snow.kAccepted
   end
   return snow.kNoop
 end
 
 ---@param env FixedUserEnv
 function fixed_user_processor.fini(env)
-  env.fixed_user_db:close()
+  if env.fixed_user_db and env.fixed_user_db:loaded() then
+    env.fixed_user_db:close()
+  end
+  if env.block_user_db and env.block_user_db:loaded() then
+    env.block_user_db:close()
+  end
 end
 
 ---@param fixed_phrases string[]
