@@ -271,19 +271,32 @@ func AddCandidateCodes(entries []*CitiEntry) []*CitiEntry {
 
 	// 创建结果数组，保持原始顺序
 	result := make([]*CitiEntry, len(entries))
-	candidateSuffixes := []string{"_", "e", "i", "[", "2", "3", "7", "8", "9", "0"}
+	candidateSuffixes := []string{"e", "i", "[", "2", "3", "7", "8", "9", "0"}
 
 	// 处理每个编码的重码情况
 	for code, group := range codeGroups {
 		if len(group) == 1 {
-			// 没有重码，为简码添加"_"后缀
-			newEntry := &CitiEntry{
-				Text:   group[0].entry.Text,
-				Code:   code + "_",
-				Freq:   group[0].entry.Freq,
-				Source: group[0].entry.Source,
+			// 没有重码，检查编码类型
+			if len(code) == 4 {
+				// 四码多字词：编码长度为4，使用28个键（qwrtyuopasdfghjkl;zxcvbnm,./）
+				// 四码多字词首选使用原编码，不添加"_"后缀
+				newEntry := &CitiEntry{
+					Text:   group[0].entry.Text,
+					Code:   code,
+					Freq:   group[0].entry.Freq,
+					Source: group[0].entry.Source,
+				}
+				result[group[0].index] = newEntry
+			} else {
+				// 简码：编码长度1~3位，为简码添加"_"后缀
+				newEntry := &CitiEntry{
+					Text:   group[0].entry.Text,
+					Code:   code + "_",
+					Freq:   group[0].entry.Freq,
+					Source: group[0].entry.Source,
+				}
+				result[group[0].index] = newEntry
 			}
-			result[group[0].index] = newEntry
 			continue
 		}
 
@@ -295,19 +308,26 @@ func AddCandidateCodes(entries []*CitiEntry) []*CitiEntry {
 		// 为每个候选添加后缀，保持原始位置
 		for i, ew := range group {
 			var newCode string
-			if i == 0 && len(code) == 4 {
-				// 4码位词组首选使用原编码，不添加后缀
-				newCode = code
+			if i == 0 {
+				// 首选：检查编码类型
+				if len(code) == 4 {
+					// 四码多字词首选使用原编码，不添加后缀
+					newCode = code
+				} else {
+					// 简码首选添加"_"后缀
+					newCode = code + "_"
+				}
 			} else if i < 10 {
-				// 前10个候选使用单字符后缀
-				newCode = code + candidateSuffixes[i]
+				// 前10个候选使用单字符后缀（从e开始，跳过_）
+				// i=1对应e, i=2对应i, ..., i=9对应0
+				newCode = code + candidateSuffixes[i-1]
 			} else {
 				// 第11个及以后的候选使用翻页格式
-				page := (i - 10) / 10
-				posInPage := (i - 10) % 10
-				// 第1页：=_, =e, =i, =[, =2, =3, =7, =8, =9, =0
-				// 第2页：==_, ==e, ==i, ==[, ==2, ==3, ==7, ==8, ==9, ==0
-				// 第3页：===_, ===e, 以此类推...
+				page := (i - 10) / 9  // 每页9个候选
+				posInPage := (i - 10) % 9
+				// 第1页：=e, =i, =[, =2, =3, =7, =8, =9, =0
+				// 第2页：==e, ==i, ==[, ==2, ==3, ==7, ==8, ==9, ==0
+				// 第3页：===e, ===i, 以此类推...
 				equals := strings.Repeat("=", page+1)
 				newCode = fmt.Sprintf("%s%s%s", code, equals, candidateSuffixes[posInPage])
 			}
@@ -344,38 +364,58 @@ func AddCandidateCodesWithSimpleSorting(entries []*CitiEntry) []*CitiEntry {
 
 	// 创建结果数组
 	result := make([]*CitiEntry, 0, len(entries))
-	candidateSuffixes := []string{"_", "e", "i", "[", "2", "3", "7", "8", "9", "0"}
+	candidateSuffixes := []string{"e", "i", "[", "2", "3", "7", "8", "9", "0"}
 
 	// 处理每个编码的重码情况
 	for code, group := range codeGroups {
 		if len(group) == 1 {
-			// 没有重码，为简码添加"_"后缀
-			newEntry := &CitiEntry{
-				Text:   group[0].Text,
-				Code:   code + "_",
-				Freq:   group[0].Freq,
-				Source: group[0].Source,
+			// 没有重码，检查编码类型
+			if len(code) == 4 {
+				// 四码多字词：编码长度为4，使用28个键（qwrtyuopasdfghjkl;zxcvbnm,./）
+				// 四码多字词首选使用原编码，不添加"_"后缀
+				newEntry := &CitiEntry{
+					Text:   group[0].Text,
+					Code:   code,
+					Freq:   group[0].Freq,
+					Source: group[0].Source,
+				}
+				result = append(result, newEntry)
+			} else {
+				// 简码：编码长度1~3位，为简码添加"_"后缀
+				newEntry := &CitiEntry{
+					Text:   group[0].Text,
+					Code:   code + "_",
+					Freq:   group[0].Freq,
+					Source: group[0].Source,
+				}
+				result = append(result, newEntry)
 			}
-			result = append(result, newEntry)
 			continue
 		}
 
 		// 有重码，按当前顺序（已经应用了出简让全逻辑）添加后缀
 		for i, entry := range group {
 			var newCode string
-			if i == 0 && len(code) == 4 {
-				// 4码位词组首选使用原编码，不添加后缀
-				newCode = code
+			if i == 0 {
+				// 首选：检查编码类型
+				if len(code) == 4 {
+					// 四码多字词首选使用原编码，不添加后缀
+					newCode = code
+				} else {
+					// 简码首选添加"_"后缀
+					newCode = code + "_"
+				}
 			} else if i < 10 {
-				// 前10个候选使用单字符后缀
-				newCode = code + candidateSuffixes[i]
+				// 前10个候选使用单字符后缀（从e开始，跳过_）
+				// i=1对应e, i=2对应i, ..., i=9对应0
+				newCode = code + candidateSuffixes[i-1]
 			} else {
 				// 第11个及以后的候选使用翻页格式
-				page := (i - 10) / 10
-				posInPage := (i - 10) % 10
-				// 第1页：=_, =e, =i, =[, =2, =3, =7, =8, =9, =0
-				// 第2页：==_, ==e, ==i, ==[, ==2, ==3, ==7, ==8, ==9, ==0
-				// 第3页：===_, ===e, 以此类推...
+				page := (i - 10) / 9  // 每页9个候选
+				posInPage := (i - 10) % 9
+				// 第1页：=e, =i, =[, =2, =3, =7, =8, =9, =0
+				// 第2页：==e, ==i, ==[, ==2, ==3, ==7, ==8, ==9, ==0
+				// 第3页：===e, ===i, 以此类推...
 				equals := strings.Repeat("=", page+1)
 				newCode = fmt.Sprintf("%s%s%s", code, equals, candidateSuffixes[posInPage])
 			}
