@@ -180,7 +180,7 @@ fixed_user:
   # append: 在后面加上
   # off: 不提示
   fixed_tips: "replace"
-  add_word_prefix: "^^"
+  add_word_prefix: "]]"
   # emoji examples: ⚡️ 👤 🔝 🔥 ✨ ⬆️ 🫵🏻 🗲 🎯 📌 💡 🌟
   quick_code_indicator: "🌟"
   custom_phrases_indicator: "💡"
