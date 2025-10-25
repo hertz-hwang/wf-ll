@@ -84,7 +84,7 @@ engine:
     - uniquifier 
 
 speller:
-  alphabet: qwrtyuopasdfghjkl;'zxcvbnm,./]
+  alphabet: qwrtyuopasdfghjkl;'zxcvbnm,./]^
   delimiter: " `"
   auto_select: true
 
@@ -178,15 +178,22 @@ ll:
     phrase: 1
 
 fixed_user:
+  effect_limit: 16
+  # replace: 替换为 📌（词典里有的）或 📍（词典里没有的）
+  # append: 在后面加上
+  # off: 不提示
+  fixed_tips: "replace"
+  add_word_prefix: "^^"
   # emoji examples: ⚡️ 👤 🔝 🔥 ✨ ⬆️ 🫵🏻 🗲 🎯 📌 💡 🌟
   quick_code_indicator: "🌟"
   custom_phrases_indicator: "💡"
-  up_key: "Control+h"
-  down_key: "Control+l"
+  delete_key: "Control+d"
+  up_key: "Control+k"
+  down_key: "Control+j"
   fix_key: "Control+t"
-  erase_key: "Control+x"
-  trigger_key: "Control+u"
-  finish_key: "Return"
+  reset_key: "Control+x"
+  trigger_key: "Control+m"
+  finish_key: "Control+e"
 
 key_binder:
   bindings:
@@ -199,7 +206,7 @@ key_binder:
     #- {accept: "Control+Control_L", send: "8", when: has_menu}
     - {accept: "Shift+Shift_L", send: "9", when: has_menu}
     - {accept: i, toggle: buffered, when: always}
-    - {accept: "Control+k", send: "Shift+Delete", when: has_menu}
+    #- {accept: "Control+k", send: "Shift+Delete", when: has_menu}
     - {accept: "5", toggle: charset_filter, when: has_menu}
     - {accept: minus, send: Page_Up, when: has_menu}
     - {accept: equal, send: Page_Down, when: has_menu}
@@ -224,7 +231,7 @@ punctuator:
     ':' : { commit: ： }
     '''': { commit: 。 }
     '"' : { pair: [ '“', '”' ] }
-    #'\' : { commit: 、 }
+    '\' : { commit: 、 }
     '|' : [ ·, ・, '|', ｜, '§', '¦', '‖' ]
     '`' : [ '`', ‵, ‶, ‷, ′, ″, ‴, ⁗ ]
     '~' : [ '~', ～, ˜, ˷, ⸯ, ≈, ≋, ≃, ≅, ≇, ∽, ⋍, ≌, ﹏, ﹋, ﹌, ︴ ]
@@ -233,7 +240,7 @@ punctuator:
     #'#' : [ '#', № ]
     '%' : [ '%', ％, '°', '℃', ‰, ‱, ℉, ℅, ℆, ℀, ℁, ⅍ ]
     '$' : [ ￥, '$', '€', '£', '¥', '¢', '¤', ₩ ]
-    '^' : { commit: …… }
+    #'^' : { commit: …… }
     #'&' : '&'
     '*' : [ '*', ＊, ·, ・, ×, ※, ❂, ⁂, ☮, ☯, ☣ ]
     '(' : （

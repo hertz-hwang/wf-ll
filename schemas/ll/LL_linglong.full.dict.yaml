@@ -613,6 +613,7 @@ encoder:
 实力悬殊	,.s.
 家贫	,.s/
 额温枪	,.s/
+宇树	,.s/
 宣你	,.s;
 家教	,.sa
 宣教	,.sa
@@ -5488,6 +5489,7 @@ encoder:
 立木南门	,sfd
 商业片儿	,sfg
 预装	,sfh
+*坐标更常用	,sfj
 航运	,sfk
 商业片	,sfk
 预卜	,sfk
@@ -7060,6 +7062,7 @@ encoder:
 一般不要	.,jk
 一字不识	.,jk
 刀丛里的诗	.,jk
+*一般用「量身定做」	.,jl
 一字不漏	.,jm
 正准备	.,jq
 一客不烦二主	.,js
@@ -17373,8 +17376,8 @@ encoder:
 个股	/dts
 九头鸟	/dtv
 金丝雀	/dtx
-简码	/dvb
 形码	/dvb
+简码	/dvb
 个屁	/dvf
 圣经贤传	/dvl
 录影带	/dvp
@@ -29575,6 +29578,7 @@ QQ等级	/ndb
 回复	;xzh
 回队	;xzh
 大呼隆	;xzj
+*系电光石火之误用	;xzj
 点到为止	;xzm
 回防	;xzm
 直到永远	;xzq
@@ -40108,6 +40112,7 @@ QQ空间	agdh
 马鹿	bj;f
 母上大人	bj;h
 马达	bj;k
+*应用糅合	bj;k
 废料	bj;l
 亲善大使	bj;l
 马粪	bj;t
@@ -40435,6 +40440,7 @@ QQ空间	agdh
 马嘶	bjxp
 马面裙	bjxp
 马祖	bjxs
+*应用神祇	bjxx
 够吃	bjxz
 非不得已	bjxz
 牧羊犬	bjya
@@ -43395,6 +43401,7 @@ QQ音乐	bskt
 兴山	bzbd
 新郎新娘	bzbg
 母马	bzbj
+*应为「巅峰」之误用	bzbj
 帮过	bzbk
 康复新液	bzbm
 凯特	bzbn
@@ -63530,6 +63537,7 @@ QQ输入法	czmd
 内层	fnvf
 或者是	fnvj
 可都是	fnvj
+内塔尼亚胡	fnvk
 或者是说	fnvk
 内息	fnvm
 十指紧扣	fnvn
@@ -64623,6 +64631,7 @@ QQ输入法	czmd
 楚歌	ftff
 血脉贲张	ftfj
 有胆有识	ftfk
+*左膀右臂之讹词	ftfk
 灰云	ftfm
 动脉血	ftfq
 灰浆	ftfs
@@ -72467,6 +72476,7 @@ AV女优	gslz
 奶嘴	gyxg
 工艺品	gyxk
 奶品	gyxk
+*此乃褫夺之误	gyxk
 儿呀	gyxl
 儿啊	gyxz
 奸猾	gyy,
@@ -81977,6 +81987,7 @@ hold不住	jals
 多姿	jb,z
 强制力	jb.,
 多臂	jb.,
+多区	jb..
 多餐	jb./
 不只一个	jb./
 多办	jb.d
@@ -83160,6 +83171,7 @@ hold不住	jals
 还有可能	jffa
 不可久留	jffa
 上下左右	jfff
+*用「尔」更好	jffg
 不可比	jffj
 卡片	jffk
 不可或缺	jffk
@@ -84168,6 +84180,7 @@ hold不住	jals
 还不够多	jjbj
 量表	jjbq
 还不够格	jjbs
+*多用特立独行	jjbv
 量瓶	jjc/
 不善言谈	jjck
 蜗轮	jjcm
@@ -84245,6 +84258,7 @@ hold不住	jals
 不用看了	jjhg
 多面手	jjhk
 不多见	jjhl
+*多用戛然而止	jjhm
 强弱易势	jjhq
 不二人选	jjht
 螳螂黄雀	jjht
@@ -84443,6 +84457,7 @@ hold不住	jals
 蜂鸣	jjxt
 多多少少	jjxx
 差不到哪	jjxx
+*多用叱咤	jjxx
 用不到的	jjxz
 不强求	jjyc
 蝼蚁尚且偷生	jjyg
@@ -90081,6 +90096,7 @@ hold不住了	jlgh
 说了	kcgh
 说些	kcgj
 谎言重复一千遍	kcgp
+*谎言重复一千遍，就会成为真理	kcgq
 谎言重复一千遍，就会成为真理	kcgq
 谎言重复一千次，就会成为真理	kcgq
 说项	kcgs
@@ -91695,6 +91711,7 @@ IT民工	kfgk
 话说回来	kk;b
 交通大学	kk;b
 设计图	kk;j
+*诌议系刍议之误用	kk;j
 通达	kk;k
 谏议大夫	kk;q
 居民点	kk;t
@@ -107502,6 +107519,7 @@ X染色体	mflh
 放心早餐	mmk.
 没法说	mmkc
 放心肉	mmkc
+涉诈	mmkd
 江泽民	mmkf
 酒池肉林	mmkf
 涉讼	mmkf
@@ -121424,6 +121442,7 @@ QQ邮箱	nz/a
 恨铁不成钢	paja
 原子弹	pajc
 君子不立危墙之下	pajf
+*原文用尔	pajf
 君子不夺人所好	pajg
 君子不器	pajk
 斟酌用词	pajk
@@ -121519,6 +121538,7 @@ QQ邮箱	nz/a
 享福	paxv
 惨苦	payk
 高收入	paz;
+*原文为「尔」	pazf
 享年	pazn
 同台竞技	pazn
 户限	pazp
@@ -123515,6 +123535,7 @@ T恤衫	pfxd
 退岗	pkbp
 勘误表	pkbq
 退席	pkbv
+*原词应为明日黄花	pkby
 退气	pkc,
 冤气	pkc,
 退税	pkcc
@@ -123699,6 +123720,7 @@ T恤衫	pfxd
 巡防	pkzm
 退防	pkzm
 退后	pkzx
+*原诗为「侯门一入」	pkzz
 即成	pl,f
 悟净	pl,f
 斯密	pl,m
@@ -125213,6 +125235,7 @@ T恤衫	pfxd
 同样要	pskg
 农村居民	pskk
 顺访	pskm
+高市早苗	psky
 顺位	psl,
 其位	psl,
 毌丘	psl.
@@ -126308,6 +126331,7 @@ T恤衫	pfxd
 高中生活	pygm
 网厅	pygq
 网媒	pygv
+网攻	pygv
 情节恶劣	pygx
 甚妙	pygx
 网易	pyh.
@@ -127266,6 +127290,7 @@ T恤衫	pfxd
 微曲	q.kb
 微克	q.kg
 势要	q.kg
+微语	q.kl
 徽剧	q.km
 微调	q.kp
 累加器	q.ky
@@ -137196,7 +137221,7 @@ RMB玩家	qq,.
 外交内政	skf.
 校歌	skff
 李诗歌	skff
-李诗歌	skff
+李诗歌_20240606	skff
 桶装	skfh
 迟早有一天	skfh
 罚下	skfl
@@ -152589,6 +152614,7 @@ QQ小冰	tq,j
 事态	vydm
 坚苦卓绝	vyfd
 事毕	vyff
+*「慰藉」更常用	vyfj
 帆布	vyfv
 事功	vyg.
 娶妻生子	vyga
@@ -166234,6 +166260,7 @@ QQ号码	xzvb
 飙歌	yyff
 蓊蓊郁郁	yyff
 盈盈下拜	yyfh
+*「狼藉」更常用	yyfj
 获免	yyfk
 苦中有乐	yyfk
 顿顿有肉	yyfk
