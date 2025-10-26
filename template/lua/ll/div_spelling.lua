@@ -14,6 +14,9 @@ https://github.com/Ace-Who/rime-xuma/blob/master/schema/lua/ace/xuma_spelling.lu
 更新[by 荒]:
 - 20250814: 同步上游更新。
 - 20251003: 适配离乱拆分注释表。
+---------------------------------------------------------------------------
+更新[by Flauver]:
+- 20251026: fix bugs.
 ]]
 
 --[[
@@ -438,8 +441,8 @@ local function init(env)
   local abc_extags_size = env.engine.schema.config:get_list_size('abc_segmentor/extra_tags')
   env.spll_rvdb = ReverseDb('build/' .. spll_rvdb .. '.reverse.bin')
   env.code_rvdb = ReverseDb('build/' .. code_rvdb .. '.reverse.bin')
-  env.spll_rvdb_tw = ReverseDb('build/' .. spll_rvdb_tw .. '.reverse.bin') or env.spll_rvdb
-  env.code_rvdb_tw = ReverseDb('build/' .. code_rvdb_tw .. '.reverse.bin') or env.code_rvdb
+  env.spll_rvdb_tw = spll_rvdb_tw and ReverseDb('build/' .. spll_rvdb_tw .. '.reverse.bin') or env.spll_rvdb
+  env.code_rvdb_tw = code_rvdb_tw and ReverseDb('build/' .. code_rvdb_tw .. '.reverse.bin') or env.code_rvdb
   env.is_mixtyping = abc_extags_size > 0
   rime.init_options(options, env.engine.context)
   env.phrase = env.engine.schema.config:get_int('ll/spelling/phrase') or 1

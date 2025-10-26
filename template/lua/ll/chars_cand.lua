@@ -6,6 +6,10 @@ Purpose: Character Candidate Module for Rime Input Method
 License: 
 Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
 
+---------------------------------------------------------------------------
+更新[by Flauver]:
+- 20251026: fix bugs.
+
 Usage:
 (1) Place this lua file in the lua directory
 (2) Add to engine/processors:
@@ -310,7 +314,7 @@ function MainProcessor.fini(env)
     end
 end
 
-function MainProcessor.process_key(key, env)
+function MainProcessor.func(key, env)
     local context = env.engine.context
     local current_segment = context.composition:back()
     
@@ -331,7 +335,6 @@ function MainProcessor.process_key(key, env)
         
         local commit_text = env.current_hint:match("：%s*(.*)%s*") or
                           env.current_hint:match(":%s*(.*)%s*")
-        
         if commit_text and #commit_text > 0 then
             env.engine:commit_text(commit_text)
             context:clear()

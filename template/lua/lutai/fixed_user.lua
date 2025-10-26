@@ -1,116 +1,10 @@
 --- 快捷调整用户固定词
---- By Flauver
---- Version: 0.3.4
 
--- 从 lutai.snow.lua 整合的必要模块
-local snow = {
-  kRejected = 0,
-  kAccepted = 1,
-  kNoop = 2,
-  kVoid = "kVoid",
-  kGuess = "kGuess",
-  kSelected = "kSelected",
-  kConfirmed = "kConfirmed",
-  kNull = "kNull",     -- 空節點
-  kScalar = "kScalar", -- 純數據節點
-  kList = "kList",     -- 列表節點
-  kMap = "kMap",       -- 字典節點
-  kShift = 0x1,
-  kLock = 0x2,
-  kControl = 0x4,
-  kAlt = 0x8,
-}
+local snow = require "lutai.snow"
 
---- 取出输入中当前正在翻译的一部分
----@param context Context
-function snow.current(context)
-  local segment = context.composition:toSegmentation():back()
-  if not segment then
-    return nil
-  end
-  return context.input:sub(segment.start + 1, segment._end)
-end
-
----格式化 Info 日志
----@param format string|number
-function snow.infof(format, ...)
-  log.info(string.format(format, ...))
-end
-
----格式化 Warn 日志
----@param format string|number
-function snow.warnf(format, ...)
-  log.warning(string.format(format, ...))
-end
-
----格式化 Error 日志
----@param format string|number
-function snow.errorf(format, ...)
-  log.error(string.format(format, ...))
-end
-
----@param s string
----@param i number
----@param j number
-function snow.sub(s, i, j)
-  i = i or 1
-  j = j or -1
-  if i < 1 or j < 1 then
-    local n = utf8.len(s)
-    if not n then return "" end
-    if i < 0 then i = n + 1 + i end
-    if j < 0 then j = n + 1 + j end
-    if i < 0 then i = 1 elseif i > n then i = n end
-    if j < 0 then j = 1 elseif j > n then j = n end
-  end
-  if j < i then return "" end
-  i = utf8.offset(s, i)
-  j = utf8.offset(s, j + 1)
-  if i and j then
-    return s:sub(i, j - 1)
-  elseif i then
-    return s:sub(i)
-  else
-    return ""
-  end
-end
-
----@param candidate Candidate
----@param proxy string
-function snow.prepare(candidate, proxy, normal)
-  local proxy_segment = proxy:sub(1, candidate._end - candidate._start);
-  candidate._end = candidate._start + proxy_segment:gsub("[ ?]", ""):len()
-  if not normal then
-    candidate.quality = candidate.quality + 1
-  end
-  -- candidate.comment = ("%s, %s, %d, %d"):format(proxy, proxy_segment, candidate._start, candidate._end)
-  return candidate
-end
-
----@param path string
-function snow.table_from_tsv(path)
-  ---@type table<string, string>
-  local result = {}
-  local file = io.open(path, "r")
-  if not file then
-    return result
-  end
-  for line in file:lines() do
-    ---@type string, string
-    local character, content = line:match("([^\t]+)\t([^\t]+)")
-    if not content or not character then
-      goto continue
-    end
-    result[character] = content
-    ::continue::
-  end
-  file:close()
-  return result
-end
-
--- 原有的 fixed_user.lua 代码继续从这里开始
 local fixed_user_processor = {}
 
+--- 为了跟 librime 的机制相同，Record 的 cands 和 isFixed 是从0开始的
 ---@param t table<integer, any>
 ---@retern any[]
 local function index0ToArray(t)
@@ -144,10 +38,8 @@ local function showRecord(r)
 end
 
 ---@class FixedUserEnv: Env
----@field fixed_user_db LevelDb
----@field block_user_db LevelDb
----@field get_unscreened_candidates fun(): Candidate[]
----@field set_unscreened_candidates fun(cands: Candidate[])
+---@field fixed_user_memory Memory
+---@field block_user_memory Memory
 ---@field get_native_candidate_set fun(): table<string, boolean>
 ---@field set_native_candidate_set fun(new_set: table<string, boolean>)
 ---@field record Record
@@ -164,199 +56,135 @@ end
 ---@field fixed_tips string
 ---@field add_word_prefix string
 ---@field alphabet table<string, boolean>
----@field quick_code_indicator string
----@field linglong_quality_threshold integer
----@field custom_phrases_indicator string
----@field custom_quality_threshold integer
 
----@type table<string, LevelDb>
-FixedUserDbPool = FixedUserDbPool or {}
+--- fixed_user_memory 有两种一对多键值对，一级：{code: word} 和 二级：{code|word: index}
+--- commit_count 作为是否生效的标记，正为生效，负为无效
 
-local function getFixedUserDb(schema_name)
-  local dbname = schema_name .. "_fixed_user"
-  FixedUserDbPool[dbname] = FixedUserDbPool[dbname] or LevelDb(dbname)
-  local db = FixedUserDbPool[dbname]
-  if db and not db:loaded() then
-    db:open()
+---@param memory Memory
+---@param code string
+local function FixedUserMemoryReset(memory, code)
+  memory:user_lookup(code, false)
+  for v_1 in memory:iter_user() do
+    memory:update_userdict(v_1, -1, "")
+    memory:user_lookup(string.format("%s|%s", code, v_1.text), false)
+    for v_2 in memory:iter_user() do
+      memory:update_userdict(v_2, -1, "")
+    end
   end
-  return db
 end
 
----@param db UserDb
+---@param memory Memory
 ---@param r Record
-local function FixedUserDbUpdate(db, r)
-  local _fixed_string_array = {}
-  local last_fixed_index = 0
+local function FixedUserMemoryUpdate(memory, r)
+  FixedUserMemoryReset(memory, r.code)
   for k, text in pairs(r.cands) do
     if r.isFixed[k] then
-      _fixed_string_array[k + 1] = text
-      last_fixed_index = math.max(k, last_fixed_index)
-    else
-      _fixed_string_array[k + 1] = "∅"
+      local entry_1 = DictEntry()
+      entry_1.custom_code = r.code .. " "
+      entry_1.text = text
+      memory:update_userdict(entry_1, 1, "")
+      local entry_2 = DictEntry()
+      entry_2.custom_code = string.format("%s|%s ", r.code, text)
+      entry_2.text = tostring(k)
+      memory:update_userdict(entry_2, 1, "")
     end
   end
-  local fixed_string_array = {}
-  local i = 0
-  for _, text in ipairs(_fixed_string_array) do
-    i = i + 1
-    if i - 1 > last_fixed_index then
-      break
-    end
-    table.insert(fixed_string_array, text)
-  end
-  local db_key = string.format("%s\t0", r.code)
-  local fixed_string = table.concat(fixed_string_array, "|")
-  local t = 0
-  for _, v in db:query(db_key):iter() do
-    t = string.match(v, "t=(%d+)")
-  end
-  db:update(db_key, string.format("c=1 d=%s t=%d", fixed_string, t + 1))
 end
 
----@param db LevelDb
----@param text string
-local function FixedUserDbReset(db, text)
-  local db_key = string.format("%s\t0", text)
-  local t = 0
-  for _, v in db:query(db_key):iter() do
-    t = string.match(v, "t=(%d+)")
-  end
-  db:update(db_key, string.format("c=1 d=0 t=%d", t + 1))
-end
-
----@param db LevelDb
+---@param memory Memory
 ---@param code string
 ---@param length integer
 ---@return table<integer, boolean>
-local function GetIsFixed(db, code, length)
+local function GetIsFixed(memory, code, length)
   ---@type table<integer, boolean>
   local result = {}
-  ---@type string?
-  local value = nil
-  for _, v in db:query(string.format("%s\t0", code)):iter() do
-    value = v:match("d=(.+) t")
-  end
-  local i = 0
-  if value then
-    if value == "0" then
-      return result
+  memory:user_lookup(code, false)
+  for v_1 in memory:iter_user() do
+    memory:user_lookup(string.format("%s|%s", code, v_1.text), false)
+    for v_2 in memory:iter_user() do
+      result[tonumber(v_2.text)] = true
     end
-    for text in value:gmatch("[^|]+") do
-      i = i + 1
-      if text == "∅" then
-        result[i - 1] = false
-      else
-        result[i - 1] = true
+  end
+  for i = 0, length - 1 do
+    if not result[i] then
+      result[i] = false
+    end
+  end
+  return result
+end
+
+---@param memory Memory
+---@param code string
+---@return table<integer, string>
+local function FixedUserMemoryQuery(memory, code)
+  ---@type table<integer, string>
+  local result = {}
+  local max_index = -1
+  memory:user_lookup(code, false)
+  for v_1 in memory:iter_user() do
+    memory:user_lookup(string.format("%s|%s", code, v_1.text), false)
+    for v_2 in memory:iter_user() do
+      local index = tonumber(v_2.text)
+      if index then
+        result[index] = v_1.text
+        max_index = math.max(max_index, index)
       end
     end
   end
-  for j = i, length - 1 do
-    result[j] = false
-  end
-  return result
-end
-
----@param db LevelDb
----@param code string
----@return table<number, string>
-local function FixedUserDbQuery(db, code)
-  ---@type table<number, string>
-  local result = {}
-  ---@type string?
-  local value = nil
-  for _, v in db:query(string.format("%s\t0", code)):iter() do
-    value = v:match("d=(.+) t")
-  end
-  local i = 0
-  if value then
-    if value == "0" then
-      return result
-    end
-    for text in value:gmatch("[^|]+") do
-      i = i + 1
-      result[i - 1] = text
+  for i = 0, max_index do
+    if not result[i] then
+      result[i] = "∅"
     end
   end
   return result
 end
 
----@type table<string, LevelDb>
-BlockUserDbPool = BlockUserDbPool or {}
+--- block_user_memory 存的是 {code: word}，还是用 commit_count 表示是否生效，正为生效，负为无效
 
-local function getBlockUserDb(schema_name)
-  local dbname = schema_name .. "_block_user"
-  BlockUserDbPool[dbname] = BlockUserDbPool[dbname] or LevelDb(dbname)
-  local db = BlockUserDbPool[dbname]
-  if db and not db:loaded() then
-    db:open()
-  end
-  return db
-end
-
----@param db LevelDb
+---@param memory Memory
 ---@param word string
 ---@param code string
-local function BlockUserDbUpdate(db, word, code)
-  local db_key = string.format("%s\t%s", code, word)
-  local t = 0
-  for _, v in db:query(db_key):iter() do
-    t = string.match(v, "t=(%d)")
-  end
-  db:update(db_key, string.format("c=1 d=1 t=%d", t + 1))
-  db:flush()  -- 立即刷新到磁盘
+local function BlockUserMemoryUpdate(memory, word, code)
+  local entry = DictEntry()
+  entry.custom_code = code .. " "
+  entry.text = word
+  memory:update_userdict(entry, 1, "")
 end
 
----@param db UserDb
+---@param memory Memory
 ---@param code string
 ---@param cands Candidate[]
 ---@return Candidate[]
-local function BlockCandidates(db, code, cands)
+local function BlockCandidates(memory, code, cands)
+  ---@type table<string, boolean>
+  local blocked = {}
+  memory:user_lookup(code, false)
+  for v in memory:iter_user() do
+    blocked[v.text] = true
+  end
   ---@type Candidate[]
   local result = {}
   for _, cand in ipairs(cands) do
-    local db_key = string.format("%s\t%s", code, cand.text)
-    ---@type string?
-    local enable = nil
-    for _, v in db:query(db_key):iter() do
-      enable = string.match(v, "d=(%d)")
-    end
-    if enable ~= "1" then
+    if not blocked[cand.text] then
       table.insert(result, cand)
     end
   end
   return result
 end
 
----@param db UserDb
+---@param memory Memory
 ---@param code string
----@param cands Candidate[]
-local function BlockUserDbReset(db, code, cands)
-  for _, cand in ipairs(cands) do
-    local db_key = string.format("%s\t%s", code, cand.text)
-    local t = 0
-    for _, v in db:query(db_key):iter() do
-      t = string.match(v, "t=(%d)")
-    end
-    db:update(db_key, string.format("c=1 d=0 t=%d", t + 1))
+local function BlockUserMemoryReset(memory, code)
+  memory:user_lookup(code, false)
+  for v in memory:iter_user() do
+    local entry = DictEntry()
+    entry.custom_code = v.custom_code
+    entry.text = v.text
+    memory:update_userdict(entry, -1, "")
   end
 end
 
----@type table<string, Candidate[]>
-UnscreenedCandidatesPool = UnscreenedCandidatesPool or {}
-
----@param schema_name string
----@return Candidate[]
-local function getUnscreenedCandidates(schema_name)
-  UnscreenedCandidatesPool[schema_name] = UnscreenedCandidatesPool[schema_name] or {}
-  return UnscreenedCandidatesPool[schema_name]
-end
-
----@param schema_name string
----@param candidates Candidate[]
-local function setUnscreenedCandidates(schema_name, candidates)
-  UnscreenedCandidatesPool[schema_name] = candidates
-end
-
+--- 原生候选池
 ---@type table<string, table<string, boolean>>
 NativeCandidateSetPool = NativeCandidateSetPool or {}
 
@@ -391,35 +219,6 @@ local function fixed_tips(cand, char, env)
   _switch1[env.fixed_tips](cand)
 end
 
---- 辅助函数：为候选词添加标记（来自 fixed_filter.lua）
----@param cand Candidate
----@param indicator string
----@return Candidate
-local function add_indicator(cand, indicator)
-   if not cand.comment or cand.comment == "" then
-      cand.comment = indicator
-   elseif not cand.comment:find(indicator) then
-      -- 如果已有注释但不包含该标记，则添加到注释前面
-      cand.comment = indicator .. " " .. cand.comment
-   end
-   return cand
-end
-
---- 标记候选词来源（来自 fixed_filter.lua）
----@param cand Candidate
----@param env FixedUserEnv
----@return Candidate
-local function mark_candidate_source(cand, env)
-   -- 检查候选词是否来自 LL_linglong 词库
-   if cand.quality >= env.linglong_quality_threshold then
-      cand = add_indicator(cand, env.quick_code_indicator)
-   -- 检查候选词是否来自自定义词库
-   elseif cand.quality >= env.custom_quality_threshold and cand.quality < env.linglong_quality_threshold then
-      cand = add_indicator(cand, env.custom_phrases_indicator)
-   end
-   return cand
-end
-
 ---@param env FixedUserEnv
 local function setDefault(env)
   env.effect_limit = 16
@@ -432,26 +231,76 @@ local function setDefault(env)
   env.reset_key = KeyEvent("Control+x")
   env.fixed_tips = "replace"
   env.add_word_prefix = "//"
-  -- 来自 fixed_filter.lua 的默认配置
-  env.quick_code_indicator = "🌟"
-  env.linglong_quality_threshold = 100000
-  env.custom_phrases_indicator = "💡"
-  env.custom_quality_threshold = 10000
 end
 
 ---@type fun(word: string, code: string, env: FixedUserEnv)
 local addWord
 
 ---@param env FixedUserEnv
+local function connectMemory(env)
+  local path = rime_api:get_user_data_dir()
+  local name = env.engine.schema.schema_id
+  --- 这个 Memory 不能只操作 user_dict，所以只能弄个伪码表给它
+  --- 这个伪码表原来的名字是 lutai.dict.yaml，里面只有 了\ta 这个条目，但编译之后，换了名字也可以用
+  local fixed_build_table = io.open(path .. "/build/" .. name .. "_fixed_user.table.bin", "rb")
+  if not fixed_build_table then
+    local template_table = io.open(path .. "/build_template/abc.table.bin", "rb")
+    local build_table = io.open(path .. "/build/" .. name .. "_fixed_user.table.bin", "wb")
+    if template_table and build_table then
+      build_table:write(template_table:read("a"))
+      build_table:close()
+      template_table:close()
+    end
+  else
+    fixed_build_table:close()
+  end
+  local fixed_build_prism = io.open(path .. "/build/" .. name .. "_fixed_user.prism.bin", "rb")
+  if not fixed_build_prism then
+    local template_prism = io.open(path .. "/build_template/abc.prism.bin", "rb")
+    local build_prism = io.open(path .. "/build/" .. name .. "_fixed_user.prism.bin", "wb")
+    if template_prism and build_prism then
+      build_prism:write(template_prism:read("a"))
+      build_prism:close()
+      template_prism:close()
+    end
+  else
+    fixed_build_prism:close()
+  end
+  local schema = Schema(name .. "_fixed_user")
+  schema.config:set_string("translator/dictionary", name .. "_fixed_user")
+  env.fixed_user_memory = Memory(env.engine, schema)
+  local block_build_table = io.open(path .. "/build/" .. name .. "_block_user.table.bin", "rb")
+  if not block_build_table then
+    local template_table = io.open(path .. "/build_template/abc.table.bin", "rb")
+    local build_table = io.open(path .. "/build/" .. name .. "_block_user.table.bin", "wb")
+    if template_table and build_table then
+      build_table:write(template_table:read("a"))
+      build_table:close()
+      template_table:close()
+    end
+  else
+    block_build_table:close()
+  end
+  local block_build_prism = io.open(path .. "/build/" .. name .. "_block_user.prism.bin", "rb")
+  if not block_build_prism then
+    local template_prism = io.open(path .. "/build_template/abc.prism.bin", "rb")
+    local build_prism = io.open(path .. "/build/" .. name .. "_block_user.prism.bin", "wb")
+    if template_prism and build_prism then
+      build_prism:write(template_prism:read("a"))
+      build_prism:close()
+      template_prism:close()
+    end
+  else
+    block_build_prism:close()
+  end
+  local schema = Schema(name .. "_block_user")
+  schema.config:set_string("translator/dictionary", name .. "_block_user")
+  env.block_user_memory = Memory(env.engine, schema)
+end
+
+---@param env FixedUserEnv
 function fixed_user_processor.init(env)
-  env.fixed_user_db = getFixedUserDb(env.engine.schema.schema_id)
-  env.block_user_db = getBlockUserDb(env.engine.schema.schema_id)
-  env.get_unscreened_candidates = function ()
-    return getUnscreenedCandidates(env.engine.schema.schema_id)
-  end
-  env.set_unscreened_candidates = function (cands)
-    setUnscreenedCandidates(env.engine.schema.schema_id, cands)
-  end
+  connectMemory(env)
   env.get_native_candidate_set = function ()
     return getNativeCandidateSet(env.engine.schema.schema_id)
   end
@@ -561,31 +410,6 @@ function fixed_user_processor.init(env)
     else
       env.add_word_prefix = "//"
     end
-    -- 从 fixed_filter.lua 读取配置
-    local quick_code_indicator = fixed_user_config:get_value("quick_code_indicator")
-    if quick_code_indicator then
-      env.quick_code_indicator = quick_code_indicator:get_string()
-    else
-      env.quick_code_indicator = "⚡️"
-    end
-    local linglong_quality_threshold = fixed_user_config:get_value("linglong_quality_threshold")
-    if linglong_quality_threshold then
-      env.linglong_quality_threshold = linglong_quality_threshold:get_int() or 100000
-    else
-      env.linglong_quality_threshold = 100000
-    end
-    local custom_phrases_indicator = fixed_user_config:get_value("custom_phrases_indicator")
-    if custom_phrases_indicator then
-      env.custom_phrases_indicator = custom_phrases_indicator:get_string()
-    else
-      env.custom_phrases_indicator = "👤"
-    end
-    local custom_quality_threshold = fixed_user_config:get_value("custom_quality_threshold")
-    if custom_quality_threshold then
-      env.custom_quality_threshold = custom_quality_threshold:get_int() or 10000
-    else
-      env.custom_quality_threshold = 10000
-    end
     env.alphabet = {}
     local _select_keys = fixed_user_config:get_value("select_keys")
     if _select_keys then
@@ -614,8 +438,8 @@ end
 
 ---@type fun(word: string, code: string, env: FixedUserEnv)
 addWord = function (word, code, env)
-  local cands = FixedUserDbQuery(env.fixed_user_db, code)
-  local isFixed = GetIsFixed(env.fixed_user_db, code, 0)
+  local cands = FixedUserMemoryQuery(env.fixed_user_memory, code)
+  local isFixed = GetIsFixed(env.fixed_user_memory, code, 0)
   if cands[0] ~= nil then
     cands[#cands + 1] = word
     isFixed[#isFixed + 1] = true
@@ -623,7 +447,7 @@ addWord = function (word, code, env)
     cands = {[0] = word}
     isFixed = {[0] = true}
   end
-  FixedUserDbUpdate(env.fixed_user_db, {
+  FixedUserMemoryUpdate(env.fixed_user_memory, {
     code = code,
     index = 0,
     cands = cands,
@@ -660,12 +484,12 @@ function fixed_user_processor.func(key_event, env)
     for i = 1, menu_size do
       env.record.cands[i - 1] = menu:get_candidate_at(i - 1).text
     end
-    for k, v in pairs(FixedUserDbQuery(env.fixed_user_db, input)) do
+    for k, v in pairs(FixedUserMemoryQuery(env.fixed_user_memory, input)) do
       if v ~= "∅" then
         env.record.cands[k] = menu:get_candidate_at(k).text
       end
     end
-    env.record.isFixed = GetIsFixed(env.fixed_user_db, input, menu_size)
+    env.record.isFixed = GetIsFixed(env.fixed_user_memory, input, menu_size)
     env.record.index = 0
     return snow.kAccepted
   elseif adjusting and key_event:eq(env.finish_key) then
@@ -728,9 +552,10 @@ function fixed_user_processor.func(key_event, env)
     end
     env.record.cands = new_cands
     env.record.isFixed = new_fixed
-    FixedUserDbUpdate(env.fixed_user_db, env.record)
+    FixedUserMemoryUpdate(env.fixed_user_memory, env.record)
     if env.get_native_candidate_set()[word] then
-      BlockUserDbUpdate(env.block_user_db, word, env.record.code)
+      -- 只有原生候选才加入屏蔽列表，就是只存在于 fixed_user_memory 的候选直接在 fixed_user_memory 删了就行
+      BlockUserMemoryUpdate(env.block_user_memory, word, env.record.code)
     end
     context:clear()
     if input then
@@ -742,11 +567,11 @@ function fixed_user_processor.func(key_event, env)
     env.record.cands = {}
     env.record.isFixed = {}
     seg.prompt = "清空自定义"
-    FixedUserDbReset(env.fixed_user_db, env.record.code)
-    BlockUserDbReset(env.block_user_db, env.record.code, env.get_unscreened_candidates())
+    FixedUserMemoryReset(env.fixed_user_memory, env.record.code)
+    BlockUserMemoryReset(env.block_user_memory, env.record.code)
     return snow.kAccepted
   elseif adjusting and keyName == "space" then
-    FixedUserDbUpdate(env.fixed_user_db, env.record)
+    FixedUserMemoryUpdate(env.fixed_user_memory, env.record)
     local input = snow.current(context)
     context:clear()
     if input then
@@ -754,52 +579,35 @@ function fixed_user_processor.func(key_event, env)
       context.composition:toSegmentation():back().prompt = "重载"
     end
     return snow.kAccepted
-  -- 先输入编码，再输入 add_word_prefix 来进入加词模式
-  elseif not key_event:release() and snow.current(context) then
-    local input = snow.current(context)
-    if not input then
-      return snow.kNoop
-    end
-    
-    -- 检查是否以 add_word_prefix 结尾
-    local prefix_len = #env.add_word_prefix
-    if #input > prefix_len and input:sub(-prefix_len) == env.add_word_prefix then
-      local code = input:sub(1, -prefix_len - 1)  -- 获取前缀前的编码部分
-      
-      -- 设置操作，允许 BackSpace 和 Escape
-      local operation = {
+  elseif not key_event:release() and snow.current(context) and snow.current(context):sub(-#env.add_word_prefix) == env.add_word_prefix then
+    local operation = {
         ["BackSpace"] = true,
         ["Escape"] = true
-      }
-      
-      if env.alphabet[keyChar] then
+    }
+    if env.alphabet[keyChar] then
         context:push_input(keyChar)
-      end
-      if operation[keyName] then
-        return snow.kNoop
-      end
-      if keyName ~= "space" then
-        return snow.kAccepted
-      end
-      
-      -- 按空格确认加词
-      context:set_property("code_add", code)
-      context:clear()
-      seg.prompt = string.format("正在加词到 %s，请输入词语", code)
-      return snow.kAccepted
     end
+    if operation[keyName] then
+        return snow.kNoop
+    end
+    if keyName ~= "space" then
+        return snow.kAccepted
+    end
+    local input = snow.current(context)
+    if not input then
+        return snow.kAccepted
+    end
+    -- 提取编码（去掉末尾的 add_word_prefix）
+    local code = input:sub(1, -#env.add_word_prefix - 1)
+    context:set_property("code_add", code)
+    context:clear()
+    return snow.kAccepted
   end
   return snow.kNoop
 end
 
 ---@param env FixedUserEnv
 function fixed_user_processor.fini(env)
-  if env.fixed_user_db and env.fixed_user_db:loaded() then
-    env.fixed_user_db:close()
-  end
-  if env.block_user_db and env.block_user_db:loaded() then
-    env.block_user_db:close()
-  end
 end
 
 ---@param fixed_phrases string[]
@@ -847,17 +655,13 @@ function fixed_user_filter.func(translation, env)
   local input = snow.current(env.engine.context)
   if not segment or not input then
     for candidate in translation:iter() do
-      -- 应用候选词标记
-      candidate = mark_candidate_source(candidate, env)
       yield(candidate)
     end
     return
   end
-  local fixed_phrases = index0ToArray(FixedUserDbQuery(env.fixed_user_db, input))
+  local fixed_phrases = index0ToArray(FixedUserMemoryQuery(env.fixed_user_memory, input))
   if #fixed_phrases == 0 then
     for candidate in translation:iter() do
-      -- 应用候选词标记
-      candidate = mark_candidate_source(candidate, env)
       yield(candidate)
     end
     return
@@ -972,19 +776,14 @@ function fixed_user_filter.func(translation, env)
     end
     ::continue::
   end
-  env.set_unscreened_candidates(unscreened_cands)
   env.set_native_candidate_set(native_cand_set)
   if not finalized then
     finalize(fixed_phrases, unknown_candidates, i, j, unscreened_cands, segment, env)
   end
-  for _, candidates in ipairs(BlockCandidates(env.block_user_db, input, unscreened_cands)) do
-    -- 应用候选词标记
-    candidates = mark_candidate_source(candidates, env)
+  for _, candidates in ipairs(BlockCandidates(env.block_user_memory, input, unscreened_cands)) do
     yield(candidates)
   end
   for _, candidate in ipairs(excess_candidates) do
-    -- 应用候选词标记
-    candidate = mark_candidate_source(candidate, env)
     yield(candidate)
   end
 end

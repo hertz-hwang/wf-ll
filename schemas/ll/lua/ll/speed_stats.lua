@@ -1,8 +1,13 @@
+--[[
 -- librime-lua
 -- encoding: utf-8
 
 -- Speed Statistics Plugin - Optimized Version
 -- Tracks typing speed and character count statistics
+---------------------------------------------------------------------------
+更新[by Flauver]:
+- 20251026: fix bugs.
+]]
 
 local M = {}
 M.init_flag = false
@@ -582,7 +587,7 @@ function M.init(env)
     
     -- Connect event handlers
     env.engine.context.commit_notifier:connect(commit_callback)
-    env.engine.context.key_event_notifier:connect(key_event_callback)
+    env.engine.context.unhandled_key_notifier:connect(key_event_callback)
     
     M.init_flag = true
     debug_print("Speed statistics plugin initialized")

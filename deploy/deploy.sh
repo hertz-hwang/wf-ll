@@ -67,6 +67,7 @@ gen_schema() {
     #cp ../table/*.txt "${LL}" || error "复制码表文件失败"
     cp ../template/*.yaml "${LL}" || error "复制模板文件失败"
     cp -r ../template/lua "${LL}/lua" || error "复制 Lua 脚本失败"
+    cp -r ../template/build_template "${LL}/build_template" || error "复制 fixed_user 伪码表失败"
     #cp -r ../template/opencc "${LL}/opencc" || error "复制 OpenCC 配置失败"
     # 使用自定义配置覆盖默认值
     if [ -d "${NAME}" ]; then
