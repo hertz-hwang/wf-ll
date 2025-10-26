@@ -581,23 +581,22 @@ function fixed_user_processor.func(key_event, env)
     return snow.kAccepted
   elseif not key_event:release() and snow.current(context) and snow.current(context):sub(-#env.add_word_prefix) == env.add_word_prefix then
     local operation = {
-        ["BackSpace"] = true,
-        ["Escape"] = true
+      ["BackSpace"] = true,
+      ["Escape"] = true
     }
     if env.alphabet[keyChar] then
-        context:push_input(keyChar)
+      context:push_input(keyChar)
     end
     if operation[keyName] then
-        return snow.kNoop
+      return snow.kNoop
     end
     if keyName ~= "space" then
-        return snow.kAccepted
+      return snow.kAccepted
     end
     local input = snow.current(context)
     if not input then
-        return snow.kAccepted
+      return snow.kAccepted
     end
-    -- 提取编码（去掉末尾的 add_word_prefix）
     local code = input:sub(1, -#env.add_word_prefix - 1)
     context:set_property("code_add", code)
     context:clear()
@@ -660,8 +659,17 @@ function fixed_user_filter.func(translation, env)
     return
   end
   local fixed_phrases = index0ToArray(FixedUserMemoryQuery(env.fixed_user_memory, input))
+  ---@type table<string, boolean>
+  local native_cand_set = {}
   if #fixed_phrases == 0 then
+    ---@type Candidate[]
+    local output = {}
     for candidate in translation:iter() do
+      native_cand_set[candidate.text] = true
+      table.insert(output, candidate)
+    end
+    env.set_native_candidate_set(native_cand_set)
+    for _, candidate in ipairs(BlockCandidates(env.block_user_memory, input, output)) do
       yield(candidate)
     end
     return
@@ -726,8 +734,6 @@ function fixed_user_filter.func(translation, env)
   end
   ---@type Candidate[]
   local unscreened_cands = {}
-  ---@type table<string, boolean>
-  local native_cand_set = {}
   for _, _candidate in ipairs(effect_candidates) do
     local candidate = _candidate.c
     total_candidates = total_candidates + 1
