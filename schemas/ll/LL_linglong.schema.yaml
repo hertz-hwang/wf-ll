@@ -1,0 +1,158 @@
+# Rime schema settings
+# encoding: utf-8
+
+schema:
+  schema_id: LL_linglong
+  name: 离乱(固词表)【勿用】
+  version: 20251003
+  author:
+    - 作者 荒
+  description: |
+    辅助方案，不建议用于正常打字。
+
+engine:
+  processors:
+    - lua_processor@*ll.chars_cand
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - table_translator
+  filters:
+    - lua_filter@*ll.fix_filter
+    - uniquifier
+
+speller:
+  alphabet: qwrtyuopasdfghjkl;'zxcvbnm,./]
+  delimiter: "`"
+  auto_select: true
+
+translator:
+  dictionary: LL_linglong
+  enable_user_dict: true
+  enable_encoder: true
+  enable_completion: false
+  enable_sentence: false
+  encode_commit_history: false
+  max_phrase_length: 4
+  always_show_comments: true
+  initial_quality: 100000
+  preedit_format: []
+  comment_format:
+    - "xform/^~/ /"
+
+ll:
+  quick_code_indicator: "✨"
+
+key_binder:
+  bindings:
+    - {accept: "e", send: "A", when: has_menu}
+    - {accept: "i", send: "B", when: has_menu}
+    - {accept: "[", send: "C", when: has_menu}
+    - {accept: Tab, send: "C", when: has_menu}
+    - {accept: 1, send: "0", when: has_menu}
+    - {accept: 4, send: "7", when: has_menu}
+    #- {accept: "Control+Control_L", send: "8", when: has_menu}
+    - {accept: "Shift+Shift_L", send: "9", when: has_menu}
+    - {accept: "5", toggle: charset_filter, when: has_menu}
+    - {accept: minus, send: Page_Up, when: has_menu}
+    - {accept: equal, send: Page_Down, when: has_menu}
+    #- {accept: Return, send: Escape, when: composing}    # 回车清屏
+    - {accept: "Control+Shift+O", toggle: full_shape, when: always}
+    - {accept: "Control+Shift+N", toggle: ascii_mode, when: always}
+
+menu:
+  alternative_select_labels: [ '_', 'e', 'i', 'T|[', '2', '3', '4|7', 'C|8', 'S|9', '1|0']
+  alternative_select_keys: "_ABC237890"
+  page_size: 10
+
+punctuator:
+  half_shape:
+    ',' : []
+    '.' : []
+    '<' : [ 《, 〈, «, ‹, ⟨, ˂, ˱ ]
+    '>' : [ 》, 〉, », ›, ⟩, ˃, ˲ ]
+    '/' : []
+    '?' : { commit: ？ }
+    ';' : []
+    ':' : { commit: ： }
+    '''': { commit: 。 }
+    '"' : { pair: [ '“', '”' ] }
+    '\' : { commit: 、 }
+    '|' : [ ·, ・, '|', ｜, '§', '¦', '‖' ]
+    '`' : [ '`', ‵, ‶, ‷, ′, ″, ‴, ⁗ ]
+    '~' : [ '~', ～, ˜, ˷, ⸯ, ≈, ≋, ≃, ≅, ≇, ∽, ⋍, ≌, ﹏, ﹋, ﹌, ︴ ]
+    '!' : { commit: ！ }
+    '@' : [ '@', ©, ®, ℗ ]
+    '#' : [ '#', № ]
+    '%' : [ '%', ％, '°', '℃', ‰, ‱, ℉, ℅, ℆, ℀, ℁, ⅍ ]
+    '$' : [ ￥, '$', '€', '£', '¥', '¢', '¤', ₩ ]
+    '^' : { commit: …… }
+    '&' : '&'
+    '*' : [ '*', ＊, ·, ・, ×, ※, ❂, ⁂, ☮, ☯, ☣ ]
+    '(' : （
+    ')' : ）
+    '-' : '-'
+    '_' : ——
+    '+' : '+'
+    '=' : [ '=', 々, 〃 ]
+    '[' : [ 「, 【, 〔, ［, 〚, 〘 ]
+    ']' : [ 」, 】, 〕, ］, 〛, 〙 ]
+    '{' : [ 『, 〖, ｛ ]
+    '}' : [ 』, 〗, ｝ ]
+  full_shape:
+    ',' : []
+    '.' : []
+    '<' : [ 《, 〈, «, ‹, ⟨, ˂, ˱ ]
+    '>' : [ 》, 〉, », ›, ⟩, ˃, ˲ ]
+    '/' : []
+    '?' : { commit: ？ }
+    ';' : []
+    ':' : { commit: ： }
+    '''': { commit: 。 }
+    '"' : { pair: [ '“', '”' ] }
+    '\' : [ 、, '\', ＼ ]
+    '|' : [ ·, ・, '|', ｜, '§', '¦', '‖', ︴ ]
+    '`' : [ '`', ‵, ‶, ‷, ′, ″, ‴, ⁗ ]
+    '~' : [ '~', ～, ˜, ˷, ⸯ, ≈, ≋, ≃, ≅, ≇, ∽, ⋍, ≌, ﹏, ﹋, ﹌, ︴ ]
+    '!' : { commit: ！ }
+    '@' : [ '@', ©, ®, ℗ ]
+    '#' : [ '#', № ]
+    '%' : [ '%', ％, '°', '℃', ‰, ‱, ℉, ℅, ℆, ℀, ℁, ⅍ ]
+    '$' : [ ￥, '$', '€', '£', '¥', '¢', '¤', ₩ ]
+    '^' : { commit: …… }
+    '&' : '&'
+    '*' : [ '*', ＊, ·, ・, ×, ※, ❂, ⁂, ☮, ☯, ☣ ]
+    '(' : （
+    ')' : ）
+    '-' : '-'
+    '_' : ——
+    '+' : '+'
+    '=' : [ '=', 々, 〃 ]
+    '[' : [ 「, 【, 〔, ［, 〚, 〘 ]
+    ']' : [ 」, 】, 〕, ］, 〛, 〙 ]
+    '{' : [ 『, 〖, ｛ ]
+    '}' : [ 』, 〗, ｝ ]
+  symbols:
+    __include: symbols:/punctuator/symbols
+
+recognizer:
+  #import_preset: default
+  patterns:
+    reverse_lookup: "^`([qwrtyuopasdfghjklzxcvbnm,.]+?)*$"
+    PY_lookup: "^`P([qwrtyuopasdfghjklzxcvbnm,.]+'?)*$"
+    xtroke_lookup: "^`X([hspnz]+'?)*$"
+    roots: "][qwrtyuopasdfghjklzxcvbnm;,/]*"
+    punct: '^\|([QWRTYUOPASDFGHJKLZXCVBNM<>qwrtyuopasdfghjklzxcvbnm,.]+)$'

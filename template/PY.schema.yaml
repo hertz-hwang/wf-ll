@@ -1,0 +1,121 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: PY
+  name: 离乱拼音反查
+  version: 0.0
+  author:
+    - 荒
+  description: 离乱拼音反查
+  dependencies:
+    - symbols
+
+switches:
+  - name: full_shape
+    states: [  半, 全  ]
+    reset: 0
+  - name: spelling
+    reset: 0
+    states: [  码, 音  ]
+  - name: zh_simp
+    reset: 0
+    states: [  简, 繁  ]
+  - name: gb2312
+    reset: 0
+    states: [  扩, 常  ]
+  - name: ascii_mode
+    reset: 0
+    states: [  中, 英  ]
+  - name: ascii_punct
+    states: ["。", "．"]
+    reset: 0
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - script_translator
+  filters:
+    - uniquifier
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba,.
+  delimiter: " '"
+  algebra:
+    - abbrev/^([a-z]).+$/$1/
+    - abbrev/^([zcs]h).+$/$1/
+    - derive/e/,/
+    - derive/i/./
+    #- derive/^([nl])ue$/$1ve/
+    #- derive/^([jqxy])u/$1v/
+    #- derive/un$/uen/
+    #- derive/ui$/uei/
+    #- derive/iu$/iou/
+    #- derive/([aeiou])ng$/$1gn/
+    #- derive/([dtngkhrzcs])o(u|ng)$/$1o/
+    #- derive/ong$/on/
+    #- derive/ao$/oa/
+    #- derive/([iu])a(o|ng?)$/a$1$2/
+
+translator:
+  dictionary: PY
+  prism: PY
+  initial_quality: 1    #该翻译器出字优先级别
+  enable_user_dict: true # 开启用户词典〔用户词典记录动态字词频、用户词〕
+  enable_encoder: true # 开启自动造词
+  strict_spelling: false
+  enable_sentence: false # 是否开启自动造句
+  enable_completion: false # 编码提示 true 开启  false 关闭
+  encode_commit_history: true # 是否对已上屏的词自动造词
+  max_phrase_length: 99  #自动造词的最长字数
+  user_dict: PY      #在本地生成的用户词典名称
+  db_class: tabledb  #用户词典格式，tabledb（文本） 或 userdb （二进制）
+  comment_format:  #提示码自定义
+    - "xform/~/ /" #去掉编码提示前的~号
+  # disable_user_dict_for_patterns:
+  # #  - "^z.*$"  #这是原始默认设置
+  #   - "^[a-y]{1,2}$"  #2码及以下不使用自动调频、不自动造词
+  preedit_format: # 上屏码自定义
+    - xform/([nl])v/$1ü/ # 拼音状态下输入nv实际显示nü
+    - xform/([nl])ue/$1üe/ # n或者l后面紧跟着输入ue显示üe
+    - xform/([jqxy])v/$1u/ # j q x y 后面紧跟着输入v 实际显示u
+
+menu:
+  page_size: 10
+punctuator:
+  import_preset: default
+
+key_binder:
+  #import_preset: default
+  bindings:
+    - {accept: semicolon, send: 2, when: has_menu}
+    - {accept: apostrophe, send: 3, when: has_menu}
+    - { when: has_menu, accept: comma, send: comma }
+    - { when: has_menu, accept: period, send: period } 
+    - {accept: "Control+Shift+O", toggle: full_shape, when: always} 
+    - {accept: "Control+Shift+U", toggle: spelling, when: always} 
+    - {accept: "Control+Shift+Y", toggle: spelling, when: always}
+    - {accept: "Control+Shift+K", toggle: spelling, when: always}
+    - {accept: "Control+Shift+E", toggle: ascii_mode, when: always} 
+    - {accept: "Control+space", toggle: ascii_mode, when: always} 
+    - {accept: "Control+Shift+J", toggle: zh_simp, when: always}
+    - {accept: "Control+Shift+G", toggle: gb2312, when: always} 
+    - {accept: "Control+period", toggle: ascii_punct, when: always} 
+
+recognizer:
+  import_preset: default

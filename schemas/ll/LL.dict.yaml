@@ -1,0 +1,34 @@
+# encoding: utf-8
+#
+# 离乱
+# 版本: 20251001
+#
+
+---
+name: LL
+version: release
+sort: by_weight
+import_tables:
+  - LL.chars.quick
+  - LL.chars.full
+  - LL.words.quick
+  - LL.words.full
+  - LL.roots
+columns:
+  - text
+  - code
+  - weight
+encoder:
+  exclude_patterns:
+    - "^[a-z]$" # 一简
+    - "[^a-z]"
+    #- "^.{1}$"
+    #- "^.{1}[wruo]$"
+  rules:
+    - length_equal: 2
+      formula: "AaAbBaBb"
+    - length_equal: 3
+      formula: "AaBaCaCb"
+    - length_in_range: [4, 99]
+      formula: "AaBaCaZa"
+...

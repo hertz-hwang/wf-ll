@@ -1,0 +1,15 @@
+# encoding: utf-8
+#
+# 离乱拆分注释
+# 版本: 20251001
+#
+
+---
+name: "LL_chaifen"
+version: 20251001
+sort: original
+columns:
+  - text
+  - code
+...
+
