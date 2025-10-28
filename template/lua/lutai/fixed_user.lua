@@ -6,7 +6,7 @@ local fixed_user_processor = {}
 
 --- 为了跟 librime 的机制相同，Record 的 cands 和 isFixed 是从0开始的
 ---@param t table<integer, any>
----@retern any[]
+---@return any[]
 local function index0ToArray(t)
   ---@type any[]
   local result = {}
@@ -59,6 +59,13 @@ end
 
 --- fixed_user_memory 有两种一对多键值对，一级：{code: word} 和 二级：{code|word: index}
 --- commit_count 作为是否生效的标记，正为生效，负为无效
+
+--- 安全关闭词库文件
+---@param env FixedUserEnv
+local function closeMemory(env)
+  env.fixed_user_memory = nil
+  env.block_user_memory = nil
+end
 
 ---@param memory Memory
 ---@param code string
@@ -607,6 +614,7 @@ end
 
 ---@param env FixedUserEnv
 function fixed_user_processor.fini(env)
+  closeMemory(env)  -- 显式关闭词库文件
 end
 
 ---@param fixed_phrases string[]
@@ -792,6 +800,11 @@ function fixed_user_filter.func(translation, env)
   for _, candidate in ipairs(excess_candidates) do
     yield(candidate)
   end
+end
+
+---@param env FixedUserEnv
+function fixed_user_filter.fini(env)
+  closeMemory(env)  -- 显式关闭词库文件
 end
 
 return {
