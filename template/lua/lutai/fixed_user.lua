@@ -28,10 +28,12 @@ local function showRecord(r)
   ---@type string[]
   local result = {}
   for k, text in pairs(r.cands) do
-    if r.isFixed[k] then
-      result[k + 1] = "★" .. text
-    else
-      result[k + 1] = text
+    if text and k then
+      if r.isFixed[k] then
+        result[k + 1] = "★" .. text
+      else
+        result[k + 1] = text
+      end
     end
   end
   return table.concat(result, " ")
@@ -65,6 +67,7 @@ end
 local function closeMemory(env)
   env.fixed_user_memory = nil
   env.block_user_memory = nil
+  collectgarbage()
 end
 
 ---@param memory Memory
@@ -253,6 +256,9 @@ local function connectMemory(env)
   if not fixed_build_table then
     local template_table = io.open(path .. "/build_template/abc.table.bin", "rb")
     local build_table = io.open(path .. "/build/" .. name .. "_fixed_user.table.bin", "wb")
+    if not build_table then
+      return
+    end
     if template_table and build_table then
       build_table:write(template_table:read("a"))
       build_table:close()
