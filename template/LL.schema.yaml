@@ -82,7 +82,7 @@ engine:
     - uniquifier 
 
 speller:
-  alphabet: qwertyuiopasdfghjkl;'zxcvbnm,./]^
+  alphabet: qwertyuiopasdfghjkl;'zxcvbnm,./]V
   delimiter: " `"
   auto_select: true
 
