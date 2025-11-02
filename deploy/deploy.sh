@@ -79,7 +79,10 @@ gen_schema() {
     if [ ! -f "${LL}/玲珑.txt" ]; then
         log "警告: 玲珑.txt文件不存在，跳过玲珑多字词处理"
     fi
-
+    
+    # -l  一字词简码长度限制
+    # -wL 多字词简码长度限制
+    # -ll 玲珑词简码长度限制
     log "生成${NAME}码表..."
     ./gen_ll -q \
         -d "${LL}/ll_div.txt" \
@@ -88,7 +91,7 @@ gen_schema() {
         -L "${LL}/玲珑.txt" \
         -f "${LL}/freq.txt" \
         -l "1:4,2:4,3:0,4:0" \
-        -wL "1:4,2:4,3:4,4:0" \
+        -wL "1:4,2:4,3:10,4:0" \
         -ll "1:4,2:4,3:4,4:0" \
         -u "${LL}/code_chars_full.txt" \
         -s "${LL}/code_chars_simp.txt" \
