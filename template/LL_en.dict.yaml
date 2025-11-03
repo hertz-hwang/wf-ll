@@ -1,0 +1,12 @@
+# Rime dictionary: LL_en
+# encoding: utf-8
+# CC-BY-4.0
+
+---
+name: LL_en
+version: "2024-11-12"
+sort: by_weight
+import_tables:
+  - LL.en_base
+  - LL.en_custom
+...

@@ -12,6 +12,7 @@ schema:
     - &bh xtroke
     - &cf LL_chaifen
     - &ll LL_linglong
+    - &en LL_en
   description: |
     前缀码 + 高性能多重简词
     ` 键拼音反查，e在「,」，i在「.」。symbols符号输入同理。
@@ -61,6 +62,7 @@ engine:
     - affix_segmentor@PY_lookup
     - affix_segmentor@xtroke_lookup
     - affix_segmentor@reverse_lookup
+    - affix_segmentor@LL_en
     - punct_segmentor
     - fallback_segmentor
   translators:
@@ -71,6 +73,7 @@ engine:
     - table_translator@fixed
     - table_translator@custom_phrase
     - table_translator
+    - table_translator@LL_en
     - lua_translator@*ll.speed_stats
     - history_translator@historyX
   filters: 
@@ -79,10 +82,11 @@ engine:
     - lua_filter@*ll.div_spelling*filter
     - lua_filter@*ll.fix_filter
     - lua_filter@*lutai.fixed_user*filter
-    - uniquifier 
+    - lua_filter@*ll.en*enhance_filter
+    - uniquifier
 
 speller:
-  alphabet: qwertyuiopasdfghjkl;'zxcvbnm,./]V
+  alphabet: qwertyuiopasdfghjkl;'zxcvbnm,./]ZYXWVUTSRQPONMLKJIHGFEDCBA
   delimiter: " `"
   auto_select: true
 
@@ -160,6 +164,22 @@ xtroke_lookup:
     - 'xform/^([hspnz]+)$/$1\t（\U$1\E）/'
     - xlit/HSPNZ/一丨丿丶乙/
   comment_format: []
+
+LL_en:
+  dictionary: *en
+  tag: *en
+  split_sentence: true
+  prefix: "e"
+  tips: "〔英文〕"
+  enable_sentence: true
+  enable_encoder: false
+  encode_commit_history: false
+  enable_completion: true
+  enable_user_dict: false
+  preedit_format:
+    - xlit|_| |
+  comment_format:
+    - xlit|_| |
 
 historyX:
   input: 'wj'
@@ -296,5 +316,6 @@ recognizer:
     reverse_lookup: "^`([qwrtyuopasdfghjklzxcvbnm,.]+?)*$"
     PY_lookup: "^`P([qwrtyuopasdfghjklzxcvbnm,.]+'?)*$"
     xtroke_lookup: "^`X([hspnz]+'?)*$"
+    LL_en: "^e[A-Z|a-z]*`?$"
     roots: "][qwrtyuopasdfghjklzxcvbnm;,./]*"
     punct: '^\|([QWRTYUOPASDFGHJKLZXCVBNM<>qwrtyuopasdfghjklzxcvbnm,.]+)$'
