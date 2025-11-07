@@ -10,6 +10,7 @@ use_preset_vocabulary: false
 ...
 
 abcd	abcd	100000
+emacs	emacs	100000
 vnext	vnext	100000
 xform	xform	100000
 devstack	devstack	100000
@@ -70,7 +71,7 @@ neovim	neovim	100000
 macbook	macbook	100000
 MacBook	Macbook	100000
 keyevent	keyevent	100000
-Opencc	Opencc	100000
+OpenCC	Opencc	100000
 joker	joker	100000
 pinyin	pinyin	100000
 kong	kong	100000
@@ -92,3 +93,9 @@ vmstat	vmstat	100000
 Baidu	baidu	100000
 userdb	userdb	100000
 tooltip	tooltip	100000
+xtroke	xtroke	100000
+powerpoint	powerpoint	100000
+ppt	ppt	100000
+deepseek	deepseek	10000
+anytype	anytype	10000
+siyuan	siyuan	10000

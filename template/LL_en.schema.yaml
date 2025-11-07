@@ -40,8 +40,8 @@ engine:
     - table_translator
     - punct_translator
   filters:
-    - uniquifier
     - lua_filter@*ll.en*enhance_filter
+    - uniquifier
 
 speller:
   alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA

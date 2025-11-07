@@ -18,7 +18,9 @@
 汰漒𣱾	tql	1
 雀食	tf	0
 声笔	hv/;	0
+聆码	vvvb	0
 首右	vafx	0
+丸辣	;fcq	0
 
 Ciallo～(∠・ω< )⌒☆	Vcall	0
 Ciallo～(∠・ω< )⌒★	Vcall	0
