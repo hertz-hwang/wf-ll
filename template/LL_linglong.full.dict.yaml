@@ -7,10 +7,11 @@
 ---
 name: LL_linglong.full
 version: 0x00
-sort: original
+sort: by_weight
 columns:
   - text
   - code
+  - weight
 encoder:
   exclude_patterns:
     - "^[a-z,./]$" # 一简

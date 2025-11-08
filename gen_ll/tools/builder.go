@@ -969,7 +969,12 @@ func AppendToDictFile(sourceFile, targetFile string, needSort, removeFreq bool) 
 		// 构建排序后的内容
 		var result strings.Builder
 		for _, entry := range entries {
-			result.WriteString(fmt.Sprintf("%s\t%s\n", entry.Text, entry.Code))
+			// 如果有词频信息，写入三列格式，否则写入两列格式
+			if entry.Freq > 0 {
+				result.WriteString(fmt.Sprintf("%s\t%s\t%d\n", entry.Text, entry.Code, entry.Freq))
+			} else {
+				result.WriteString(fmt.Sprintf("%s\t%s\n", entry.Text, entry.Code))
+			}
 		}
 		sourceContent = result.String()
 	} else {
@@ -1065,7 +1070,12 @@ func sortSourceContent(content string) string {
 	// 重新构建内容
 	var result strings.Builder
 	for _, entry := range entries {
-		result.WriteString(fmt.Sprintf("%s\t%s\n", entry.Text, entry.Code))
+		// 如果有词频信息，写入三列格式，否则写入两列格式
+		if entry.Freq > 0 {
+			result.WriteString(fmt.Sprintf("%s\t%s\t%d\n", entry.Text, entry.Code, entry.Freq))
+		} else {
+			result.WriteString(fmt.Sprintf("%s\t%s\n", entry.Text, entry.Code))
+		}
 	}
 	
 	return result.String()
@@ -1168,6 +1178,13 @@ func readDictFile(filepath string) ([]*DictEntry, error) {
 			entry := &DictEntry{
 				Text: fields[0],
 				Code: fields[1],
+			}
+			// 如果有第三列，解析词频
+			if len(fields) >= 3 {
+				freq, err := strconv.ParseInt(fields[2], 10, 64)
+				if err == nil {
+					entry.Freq = freq
+				}
 			}
 			entries = append(entries, entry)
 		}
@@ -1413,9 +1430,17 @@ func writeDictFile(filepath string, entries []*DictEntry) error {
 	
 	// 写入数据条目
 	for _, entry := range entries {
-		line := fmt.Sprintf("%s\t%s\n", entry.Text, entry.Code)
-		if _, err := writer.WriteString(line); err != nil {
-			return err
+		// 如果有词频信息，写入三列格式，否则写入两列格式
+		if entry.Freq > 0 {
+			line := fmt.Sprintf("%s\t%s\t%d\n", entry.Text, entry.Code, entry.Freq)
+			if _, err := writer.WriteString(line); err != nil {
+				return err
+			}
+		} else {
+			line := fmt.Sprintf("%s\t%s\n", entry.Text, entry.Code)
+			if _, err := writer.WriteString(line); err != nil {
+				return err
+			}
 		}
 	}
 	
@@ -1516,6 +1541,7 @@ sort: original
 columns:
   - text
   - code
+  - weight
 encoder:
   exclude_patterns:
     - "^[a-z,./]$" # 一简
@@ -1555,7 +1581,7 @@ func LoadFullDictMap(dictFilePath string) (map[string][]string, error) {
 			continue
 		}
 		
-		// 解析数据行：字符\t编码
+		// 解析数据行：字符\t编码\t词频
 		fields := strings.Split(line, "\t")
 		if len(fields) >= 2 {
 			char := fields[0]
