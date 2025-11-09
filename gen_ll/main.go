@@ -531,7 +531,7 @@ func main() {
 	if !args.Quiet {
 		log.Println("将code_chars_simp.txt追加到LL.chars.quick.dict.yaml...")
 	}
-	err = tools.AppendToDictFile(args.Simple, filepath.Join(outputDir, "LL.chars.quick.dict.yaml"), true, true)
+	err = tools.AppendToDictFile(args.Simple, filepath.Join(outputDir, "LL.chars.quick.dict.yaml"), true, false)
 	if err != nil {
 		log.Printf("追加code_chars_simp.txt到LL.chars.quick.dict.yaml失败: %v", err)
 	} else if !args.Quiet {
@@ -542,7 +542,7 @@ func main() {
 	if !args.Quiet {
 		log.Println("将code_chars_full.txt追加到LL.chars.full.dict.yaml...")
 	}
-	err = tools.AppendToDictFile(args.Full, filepath.Join(outputDir, "LL.chars.full.dict.yaml"), true, true)
+	err = tools.AppendToDictFile(args.Full, filepath.Join(outputDir, "LL.chars.full.dict.yaml"), true, false)
 	if err != nil {
 		log.Printf("追加code_chars_full.txt到LL.chars.full.dict.yaml失败: %v", err)
 	} else if !args.Quiet {
@@ -553,7 +553,7 @@ func main() {
 	if !args.Quiet {
 		log.Println("将code_words_simp.txt追加到LL.words.quick.dict.yaml...")
 	}
-	err = tools.AppendToDictFile(args.WordsSimple, filepath.Join(outputDir, "LL.words.quick.dict.yaml"), true, true)
+	err = tools.AppendToDictFile(args.WordsSimple, filepath.Join(outputDir, "LL.words.quick.dict.yaml"), true, false)
 	if err != nil {
 		log.Printf("追加code_words_simp.txt到LL.words.quick.dict.yaml失败: %v", err)
 	} else if !args.Quiet {
@@ -564,7 +564,7 @@ func main() {
 	if !args.Quiet {
 		log.Println("将code_words_full.txt追加到LL.words.full.dict.yaml...")
 	}
-	err = tools.AppendToDictFile(args.WordsFull, filepath.Join(outputDir, "LL.words.full.dict.yaml"), true, true)
+	err = tools.AppendToDictFile(args.WordsFull, filepath.Join(outputDir, "LL.words.full.dict.yaml"), true, false)
 	if err != nil {
 		log.Printf("追加code_words_full.txt到LL.words.full.dict.yaml失败: %v", err)
 	} else if !args.Quiet {
@@ -575,7 +575,7 @@ func main() {
 	if !args.Quiet {
 		log.Println("将linglong_full.txt追加到LL_linglong.full.dict.yaml...")
 	}
-	err = tools.AppendToDictFile(args.LinglongFull, filepath.Join(outputDir, "LL_linglong.full.dict.yaml"), true, true)
+	err = tools.AppendToDictFile(args.LinglongFull, filepath.Join(outputDir, "LL_linglong.full.dict.yaml"), true, false)
 	if err != nil {
 		log.Printf("追加linglong_full.txt到LL_linglong.full.dict.yaml失败: %v", err)
 	} else if !args.Quiet {
@@ -586,7 +586,7 @@ func main() {
 	if !args.Quiet {
 		log.Println("将linglong_simp.txt追加到LL_linglong.quick.dict.yaml...")
 	}
-	err = tools.AppendToDictFile(args.LinglongSimple, filepath.Join(outputDir, "LL_linglong.quick.dict.yaml"), true, true)
+	err = tools.AppendToDictFile(args.LinglongSimple, filepath.Join(outputDir, "LL_linglong.quick.dict.yaml"), true, false)
 	if err != nil {
 		log.Printf("追加linglong_simp.txt到LL_linglong.quick.dict.yaml失败: %v", err)
 	} else if !args.Quiet {

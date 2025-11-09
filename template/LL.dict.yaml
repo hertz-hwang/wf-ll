@@ -7,7 +7,7 @@
 ---
 name: LL
 version: release
-sort: by_weight
+sort: original
 import_tables:
   - LL.chars.quick
   - LL.chars.full

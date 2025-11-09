@@ -7,7 +7,7 @@
 ---
 name: LL.chars.quick
 version: 0x00
-sort: by_weight
+sort: original
 columns:
   - text
   - code

@@ -14,7 +14,15 @@ import (
 	"gen_ll/types"
 )
 
-const fallBackFreq = 100
+const fallBackFreq = 0
+
+// getCharFreq 获取字符的词频，如果不存在则返回默认值
+func getCharFreq(char string, freqSet map[string]int64) int64 {
+	if freq, exists := freqSet[char]; exists {
+		return freq
+	}
+	return fallBackFreq
+}
 
 
 // BuildFullCodeMetaList 构造字符四码全码编码列表
@@ -64,7 +72,7 @@ func BuildFullCodeMetaList(table map[string][]*types.Division, mappings map[stri
 						Char:     char,
 						Full:     full,
 						Code:     code,
-						Freq:     freqSet[char],
+						Freq:     getCharFreq(char, freqSet),
 						MDiv:     i == 0,
 						Division: div, // 绑定对应的拆分信息
 					}
@@ -948,12 +956,12 @@ type DictEntry struct {
 // needSort: 是否需要排序（编码升序，重码组内按词频降序）
 // removeFreq: 是否需要删除词频列
 func AppendToDictFile(sourceFile, targetFile string, needSort, removeFreq bool) error {
-	var sourceContent string
+	var entries []*DictEntry
 	var err error
 	
 	if needSort {
 		// 如果需要排序，使用readSourceFile读取完整的DictEntry列表
-		entries, err := readSourceFile(sourceFile, !removeFreq) // 保留词频用于排序
+		entries, err = readSourceFile(sourceFile, false) // 总是保留词频用于排序
 		if err != nil {
 			return fmt.Errorf("读取源文件失败: %w", err)
 		}
@@ -965,30 +973,18 @@ func AppendToDictFile(sourceFile, targetFile string, needSort, removeFreq bool) 
 		if strings.Contains(targetFile, "LL.chars.full.dict.yaml") {
 			entries = processSimpleCharsInFullDict(entries)
 		}
-		
-		// 构建排序后的内容
-		var result strings.Builder
-		for _, entry := range entries {
-			// 如果有词频信息，写入三列格式，否则写入两列格式
-			if entry.Freq > 0 {
-				result.WriteString(fmt.Sprintf("%s\t%s\t%d\n", entry.Text, entry.Code, entry.Freq))
-			} else {
-				result.WriteString(fmt.Sprintf("%s\t%s\n", entry.Text, entry.Code))
-			}
-		}
-		sourceContent = result.String()
 	} else {
 		// 如果不需要排序，直接读取内容
-		sourceContent, err = readSourceFileContent(sourceFile, removeFreq)
+		entries, err = readSourceFile(sourceFile, false) // 总是保留词频
 		if err != nil {
 			return fmt.Errorf("读取源文件失败: %w", err)
 		}
 	}
 	
-	// 简单的追加操作：在目标文件末尾添加源文件内容
-	err = appendToFile(targetFile, sourceContent)
+	// 使用writeDictFile完全重写文件，确保格式正确
+	err = writeDictFile(targetFile, entries)
 	if err != nil {
-		return fmt.Errorf("追加到目标文件失败: %w", err)
+		return fmt.Errorf("写入字典文件失败: %w", err)
 	}
 	
 	return nil
@@ -1070,12 +1066,8 @@ func sortSourceContent(content string) string {
 	// 重新构建内容
 	var result strings.Builder
 	for _, entry := range entries {
-		// 如果有词频信息，写入三列格式，否则写入两列格式
-		if entry.Freq > 0 {
-			result.WriteString(fmt.Sprintf("%s\t%s\t%d\n", entry.Text, entry.Code, entry.Freq))
-		} else {
-			result.WriteString(fmt.Sprintf("%s\t%s\n", entry.Text, entry.Code))
-		}
+		// 总是写入三列格式（text, code, weight），即使词频为0
+		result.WriteString(fmt.Sprintf("%s\t%s\t%d\n", entry.Text, entry.Code, entry.Freq))
 	}
 	
 	return result.String()
@@ -1124,7 +1116,13 @@ func readSourceFile(filepath string, removeFreq bool) ([]*DictEntry, error) {
 			freq, err := strconv.ParseInt(fields[2], 10, 64)
 			if err == nil {
 				entry.Freq = freq
+			} else {
+				// 如果解析失败，设置默认词频为0
+				entry.Freq = 0
 			}
+		} else {
+			// 如果没有词频信息，设置默认词频为0
+			entry.Freq = 0
 		}
 		
 		entries = append(entries, entry)
@@ -1428,19 +1426,27 @@ func writeDictFile(filepath string, entries []*DictEntry) error {
 		writer.WriteString(getDefaultHeader(filepath))
 	}
 	
+	// 对于LL.chars.quick.dict.yaml，需要保留模板中的自定义特殊字符
+	if strings.Contains(filepath, "LL.chars.quick.dict.yaml") {
+		// 读取模板文件中的自定义特殊字符
+		templateEntries, err := readTemplateSpecialChars()
+		if err == nil && len(templateEntries) > 0 {
+			// 写入模板中的自定义特殊字符
+			for _, entry := range templateEntries {
+				line := fmt.Sprintf("%s\t%s\t%d\n", entry.Text, entry.Code, entry.Freq)
+				if _, err := writer.WriteString(line); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	
 	// 写入数据条目
 	for _, entry := range entries {
-		// 如果有词频信息，写入三列格式，否则写入两列格式
-		if entry.Freq > 0 {
-			line := fmt.Sprintf("%s\t%s\t%d\n", entry.Text, entry.Code, entry.Freq)
-			if _, err := writer.WriteString(line); err != nil {
-				return err
-			}
-		} else {
-			line := fmt.Sprintf("%s\t%s\n", entry.Text, entry.Code)
-			if _, err := writer.WriteString(line); err != nil {
-				return err
-			}
+		// 总是写入三列格式（text, code, weight），即使词频为0
+		line := fmt.Sprintf("%s\t%s\t%d\n", entry.Text, entry.Code, entry.Freq)
+		if _, err := writer.WriteString(line); err != nil {
+			return err
 		}
 	}
 	
@@ -1448,6 +1454,57 @@ func writeDictFile(filepath string, entries []*DictEntry) error {
 	writer.WriteString("...\n")
 	
 	return writer.Flush()
+}
+
+// readTemplateSpecialChars 读取模板文件中的自定义特殊字符
+func readTemplateSpecialChars() ([]*DictEntry, error) {
+	templatePath := "../template/LL.chars.quick.dict.yaml"
+	file, err := os.Open(templatePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	
+	var entries []*DictEntry
+	scanner := bufio.NewScanner(file)
+	inDataSection := false
+	
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		
+		// 检查是否进入数据部分
+		if line == "..." {
+			inDataSection = true
+			continue
+		}
+		
+		// 跳过头部信息
+		if !inDataSection {
+			continue
+		}
+		
+		// 跳过空行
+		if line == "" {
+			continue
+		}
+		
+		// 解析数据行
+		fields := strings.Split(line, "\t")
+		if len(fields) >= 2 {
+			entry := &DictEntry{
+				Text: fields[0],
+				Code: fields[1],
+				Freq: 0, // 特殊字符的词频设为0
+			}
+			entries = append(entries, entry)
+		}
+	}
+	
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	
+	return entries, nil
 }
 
 // readDictFileContent 读取字典文件的完整内容
@@ -1537,7 +1594,7 @@ func getDefaultHeader(filePath string) string {
 ---
 name: %s
 version: 0x00
-sort: original
+sort: by_weight
 columns:
   - text
   - code
@@ -1553,8 +1610,9 @@ encoder:
       formula: "AaAbBaBb"
     - length_equal: 3
       formula: "AaBaCaCb"
-    - length_in_range: [4, 20]
+    - length_in_range: [4, 99]
       formula: "AaBaCaZa"
+...
 `, description, name)
 }
 
