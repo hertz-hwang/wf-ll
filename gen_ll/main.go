@@ -43,6 +43,7 @@ type Args struct {
 	DazhuCode   string `flag:"z" usage:"输出dazhu_code.txt文件" default:"/tmp/dazhu_code.txt"`
 	PresetData string `flag:"P" usage:"输出preset_data.txt文件" default:"/tmp/lua/chars_cand/preset_data.txt"`
 	RootsDict  string `flag:"R" usage:"输出LL.roots.dict.yaml文件" default:"/tmp/LL.roots.dict.yaml"`
+	Pua2Alias  string `flag:"A" usage:"PUA字符到别名映射文件" default:"../deploy/离乱/pua2alias.txt"`
 }
 
 var args Args
@@ -144,6 +145,18 @@ func main() {
 	}
 	if !args.Quiet {
 		log.Printf("频率表加载完成，共 %d 项\n", len(freqSet))
+	}
+
+	// 读取PUA字符到别名映射表
+	if !args.Quiet {
+		log.Println("开始读取PUA字符到别名映射表...")
+	}
+	aliasMap, err := tools.ReadPua2Alias(args.Pua2Alias)
+	if err != nil {
+		log.Fatalf("读取PUA字符到别名映射表失败: %v", err)
+	}
+	if !args.Quiet {
+		log.Printf("PUA字符到别名映射表加载完成，共 %d 项\n", len(aliasMap))
 	}
 
 	if !args.Quiet {
@@ -340,9 +353,8 @@ func main() {
 		}
 	}()
 
-	// DAZHUCHAI - 大竹拆文件，格式为两行：
-	// 第一行："部件\t字"（将 Division.Divs 连接成字符串）
-	// 第二行："Unicode类别〔Unicode编码〕\t字"（将第二行和第三行整合）
+	// DAZHUCHAI - 大竹拆文件，格式为一行包含三个部分：
+	// "部件\t部件别名\t拼音 Unicode类别〔Unicode编码〕\t字"
 	go func() {
 		defer wg.Done()
 		buffer := bytes.Buffer{}
@@ -356,11 +368,26 @@ func main() {
 			if charMeta.Division == nil {
 				continue
 			}
-			// 第一行：部件\t字
+			
+			// 第一列：部件别名
+			aliasComponents := make([]string, len(charMeta.Division.Divs))
+			for i, comp := range charMeta.Division.Divs {
+				if alias, exists := aliasMap[comp]; exists {
+					aliasComponents[i] = alias
+				} else {
+					aliasComponents[i] = comp
+				}
+			}
+			aliasStr := strings.Join(aliasComponents, "")
+
+			// 第二列：部件
 			components := strings.Join(charMeta.Division.Divs, "")
-			buffer.WriteString(fmt.Sprintf("%s\t%s\n", components, charMeta.Char))
-			// 第二行：Unicode类别〔Unicode编码〕\t字（整合第二行和第三行）
-			buffer.WriteString(fmt.Sprintf("%s〔%s〕\t%s\n", charMeta.Division.Set, charMeta.Division.Unicode, charMeta.Char))
+			
+			// 第三列：拼音 Unicode类别〔Unicode编码〕
+			pinyinUnicode := fmt.Sprintf("〘根编：〙%s 〘拼音：〙%s 〘Uni：〙%s〔%s〕", charMeta.Full, charMeta.Division.Pin, charMeta.Division.Set, charMeta.Division.Unicode)
+			
+			// 合并为一行，用制表符分隔
+			buffer.WriteString(fmt.Sprintf("〘拆分：〙%s 〘PUA：〙%s %s\t%s\n", aliasStr, components, pinyinUnicode, charMeta.Char))
 		}
 		err := os.WriteFile(args.DazhuChai, buffer.Bytes(), 0o644)
 		if err != nil {

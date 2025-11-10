@@ -188,3 +188,32 @@ func ReadWordsFile(filepath string) ([]*types.WordEntry, error) {
 
 	return wordEntries, nil
 }
+
+// ReadPua2Alias 读取pua2alias.txt映射表
+func ReadPua2Alias(filepath string) (aliasMap map[string]string, err error) {
+	buffer, err := readFileWithCache(filepath)
+	if err != nil {
+		return
+	}
+
+	aliasMap = make(map[string]string)
+	for _, line := range strings.Split(string(buffer), "\n") {
+		line = strings.TrimSpace(line)
+		if len(line) == 0 || strings.HasPrefix(line, "#") {
+			continue
+		}
+		
+		// 格式为 "PUA字符\t{别名}"
+		fields := strings.Split(line, "\t")
+		if len(fields) < 2 {
+			continue
+		}
+		
+		puaChar := fields[0]
+		alias := fields[1] // 保留花括号
+		
+		aliasMap[puaChar] = alias
+	}
+
+	return
+}
