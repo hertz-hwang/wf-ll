@@ -388,10 +388,10 @@ func main() {
 			components := strings.Join(charMeta.Division.Divs, "")
 			
 			// 第三列：拼音 Unicode类别〔Unicode编码〕
-			pinyinUnicode := fmt.Sprintf("〘根编：〙%s 〘拼音：〙%s 〘Uni：〙%s〔%s〕", charMeta.Full, charMeta.Division.Pin, charMeta.Division.Set, charMeta.Division.Unicode)
+			pinyinUnicode := fmt.Sprintf("〘根编：%s〙〘拼音：%s〙〘Uni：%s %s〙", charMeta.Full, charMeta.Division.Pin, charMeta.Division.Set, charMeta.Division.Unicode)
 			
 			// 合并为一行，用制表符分隔
-			buffer.WriteString(fmt.Sprintf("〘拆分：〙%s 〘PUA：〙%s %s\t%s\n", aliasStr, components, pinyinUnicode, charMeta.Char))
+			buffer.WriteString(fmt.Sprintf("〘拆分：%s〙〘PUA：%s〙 %s\t%s\n", aliasStr, components, pinyinUnicode, charMeta.Char))
 		}
 		err := os.WriteFile(args.DazhuChai, buffer.Bytes(), 0o644)
 		if err != nil {
