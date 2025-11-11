@@ -739,3 +739,50 @@ func moveSpecialCharsInCiti(group []*CitiEntry) []*CitiEntry {
 	
 	return result
 }
+
+// ProcessCitiFilesWithLinglongNoSimple 使用玲珑词库的无简词版citi文件处理流程
+func ProcessCitiFilesWithLinglongNoSimple(charsSimpFile, charsFullFile, linglongQuickFile, linglongFullFile, citiPreFile, gendaCitiFile string) error {
+	// 按照指定顺序分别处理每个来源，保持各自原始排序
+	var allEntries []*CitiEntry
+
+	// 1. 首先处理ll_citi_pre.txt - 不进行重码处理，保持原有顺序
+	citiPreEntries, err := ReadCitiFile(citiPreFile, "citi_pre")
+	if err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("读取ll_citi_pre.txt失败: %w", err)
+	}
+	// ll_citi_pre.txt已经包含候选编码补码，直接使用
+	allEntries = append(allEntries, citiPreEntries...)
+
+	// 2. 然后处理code_chars_simp.txt - 不需要运用补码规则，直接使用
+	charsSimpEntries, err := ReadCitiFile(charsSimpFile, "chars_simp")
+	if err != nil {
+		return fmt.Errorf("读取code_chars_simp.txt失败: %w", err)
+	}
+	allEntries = append(allEntries, charsSimpEntries...)
+
+	// 3. 接着处理code_chars_full.txt - 需要运用补码规则，并应用出简让全逻辑
+	charsFullEntries, err := ReadCitiFile(charsFullFile, "chars_full")
+	if err != nil {
+		return fmt.Errorf("读取code_chars_full.txt失败: %w", err)
+	}
+	
+	// 对单字全码应用出简让全逻辑，然后添加补码后缀
+	charsFullEntries = applySimpleCharsSortingToCiti(charsFullEntries)
+	charsFullWithCandidates := AddCandidateCodesWithSimpleSorting(charsFullEntries)
+	allEntries = append(allEntries, charsFullWithCandidates...)
+
+	// 4. 最后处理LL_linglong.full.dict.yaml - 需要运用补码规则
+	linglongFullEntries, err := ReadCitiFile(linglongFullFile, "LL_linglong.full")
+	if err != nil {
+		return fmt.Errorf("读取LL_linglong.full.dict.yaml失败: %w", err)
+	}
+	linglongFullWithCandidates := AddCandidateCodes(linglongFullEntries)
+	allEntries = append(allEntries, linglongFullWithCandidates...)
+
+	// 创建genda_citi.txt并删除词频
+	if err := CreateGendaCiti(allEntries, gendaCitiFile); err != nil {
+		return fmt.Errorf("创建genda_citi.txt失败: %w", err)
+	}
+
+	return nil
+}

@@ -44,6 +44,8 @@ type Args struct {
 	PresetData string `flag:"P" usage:"输出preset_data.txt文件" default:"/tmp/lua/chars_cand/preset_data.txt"`
 	RootsDict  string `flag:"R" usage:"输出LL.roots.dict.yaml文件" default:"/tmp/LL.roots.dict.yaml"`
 	Pua2Alias  string `flag:"A" usage:"PUA字符到别名映射文件" default:"../deploy/离乱/pua2alias.txt"`
+	GendaCitiNoSimple string `flag:"gn" usage:"输出无简词版genda_citi.txt文件" default:"/tmp/genda_citi_no_simple.txt"`
+	DazhuCodeNoSimple string `flag:"zn" usage:"输出无简词版dazhu_code.txt文件" default:"/tmp/dazhu_code_no_simple.txt"`
 }
 
 var args Args
@@ -86,6 +88,8 @@ func main() {
 	ensureOutputDir(args.DazhuCode)
 	ensureOutputDir(args.PresetData)
 	ensureOutputDir(args.RootsDict)
+	ensureOutputDir(args.GendaCitiNoSimple)
+	ensureOutputDir(args.DazhuCodeNoSimple)
 
 	// 解析简码长度限制
 	lenCodeLimit, err := tools.ParseLenCodeLimit(args.LenCodeLimit)
@@ -517,7 +521,7 @@ func main() {
 	// 处理跟打词提
 	if args.ProcessCiti {
 		log.Println("开始处理跟打词提文件...")
-		// 使用玲珑词库的词语部分
+		// 使用玲珑词库的词语部分生成正常版本
 		err := tools.ProcessCitiFilesWithLinglong(args.Simple, args.Full, args.LinglongSimple, args.LinglongFull, args.CitiPre, args.GendaCiti)
 		if err != nil {
 			log.Printf("处理跟打词提文件失败: %v", err)
@@ -531,6 +535,24 @@ func main() {
 				log.Printf("生成大竹词提失败: %v", err)
 			} else {
 				log.Println("大竹词提生成完成")
+			}
+		}
+
+		// 同时生成无简词版
+		log.Println("开始生成无简词版跟打词提文件...")
+		err = tools.ProcessCitiFilesWithLinglongNoSimple(args.Simple, args.Full, args.LinglongSimple, args.LinglongFull, args.CitiPre, args.GendaCitiNoSimple)
+		if err != nil {
+			log.Printf("处理无简词版跟打词提文件失败: %v", err)
+		} else {
+			log.Println("无简词版跟打词提文件处理完成")
+			
+			// 生成无简词版大竹词提
+			log.Println("开始生成无简词版大竹词提...")
+			err := tools.CreateDazhuCode(args.GendaCitiNoSimple, args.DazhuCodeNoSimple, 30)
+			if err != nil {
+				log.Printf("生成无简词版大竹词提失败: %v", err)
+			} else {
+				log.Println("无简词版大竹词提生成完成")
 			}
 		}
 	}

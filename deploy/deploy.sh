@@ -104,7 +104,9 @@ gen_schema() {
         -C \
         -c "${LL}/ll_citi_pre.txt" \
         -g "${LL}/跟打词提.txt" \
+        -gn "${LL}/跟打词提_无简词.txt" \
         -z "${LL}/大竹_code.txt" \
+        -zn "${LL}/大竹_code_无简词.txt" \
         -P "${LL}/lua/chars_cand/preset_data.txt" \
         -R "${LL}/LL.roots.dict.yaml" \
         || error "生成${NAME}码表失败"
