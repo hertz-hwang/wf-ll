@@ -28,8 +28,15 @@ func ReadCitiFile(filepath string, source string) ([]*CitiEntry, error) {
 	var entries []*CitiEntry
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line == "" || strings.HasPrefix(line, "#") {
+		line := scanner.Text()
+
+		// 检查空行：只检查是否完全为空（包括空白字符）
+		if strings.TrimSpace(line) == "" {
+			continue
+		}
+
+		// 检查注释行：先清理空白再检查
+		if strings.HasPrefix(strings.TrimSpace(line), "#") {
 			continue
 		}
 
