@@ -429,6 +429,7 @@ func BuildWordsFullCode(wordEntries []*types.WordEntry, charCodeMap map[string]s
 			
 		default:
 			// 四字及以上：取第一、二、三个字和最后一个字编码的第1位
+			// 当第一、二、三个字和最后一个字部件相同时，最后一个字取编码的第2位（AaBaCaZb）
 			if len(validChars) >= 4 {
 				firstCode := charCodeMap[string(validChars[0])]
 				secondCode := charCodeMap[string(validChars[1])]
@@ -436,7 +437,27 @@ func BuildWordsFullCode(wordEntries []*types.WordEntry, charCodeMap map[string]s
 				lastCode := charCodeMap[string(validChars[len(validChars)-1])]
 				
 				if len(firstCode) >= 1 && len(secondCode) >= 1 && len(thirdCode) >= 1 && len(lastCode) >= 1 {
-					code = firstCode[:1] + secondCode[:1] + thirdCode[:1] + lastCode[:1]
+					// 检查第一、二、三个字和最后一个字的首部件是否相同
+					firstCharFirstComp := firstCode[:1]
+					secondCharFirstComp := secondCode[:1]
+					thirdCharFirstComp := thirdCode[:1]
+					lastCharFirstComp := lastCode[:1]
+					
+					// 如果四个字的首部件都相同，最后一个字取编码的第2位（中码）
+					if firstCharFirstComp == secondCharFirstComp &&
+					   secondCharFirstComp == thirdCharFirstComp &&
+					   thirdCharFirstComp == lastCharFirstComp {
+						// 使用 AaBaCaZb 公式：最后一个字取第2位编码
+						if len(lastCode) >= 2 {
+							code = firstCode[:1] + secondCode[:1] + thirdCode[:1] + lastCode[1:2]
+						} else {
+							// 如果最后一个字编码长度不足2位，回退到正常规则
+							code = firstCode[:1] + secondCode[:1] + thirdCode[:1] + lastCode[:1]
+						}
+					} else {
+						// 正常情况：使用 AaBaCaZa 公式
+						code = firstCode[:1] + secondCode[:1] + thirdCode[:1] + lastCode[:1]
+					}
 				}
 			}
 		}

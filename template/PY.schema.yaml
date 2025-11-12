@@ -57,6 +57,7 @@ speller:
   alphabet: zyxwvutsrqponmlkjihgfedcba,.
   delimiter: " '"
   algebra:
+    - derive/^([a-z].+)\d$/$1/
     - abbrev/^([a-z]).+$/$1/
     - abbrev/^([zcs]h).+$/$1/
     - derive/e/,/
