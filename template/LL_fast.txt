@@ -1,0 +1,18 @@
+# Rime table
+# coding: utf-8
+#@db/db_name	LL_fast
+#@db/db_type	stabledb
+#
+# 离乱方案快捷短语
+# 修改后重新部署方可生效
+#
+# ⚠ 自定义短语总是出现在固顶词库之后、大词库之前。
+#
+# 每行格式：文字 <tab> 编码 <tab> 权重（权重越高，顺序越靠前）
+#
+# 示例：
+说：“	kcu	0
+道：“	vkw	0
+曰：“	dfw	0
+中，	yo	0
+上，	jo	0

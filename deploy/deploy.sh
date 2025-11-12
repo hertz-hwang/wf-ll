@@ -44,6 +44,7 @@ create_ramdisk() {
 rm -rf "${SCHEMAS}/ll/build" "${SCHEMAS}/releases" "${SCHEMAS}/ll/lua/chars_cand.userdb"
 create_ramdisk
 mkdir -p "${SCHEMAS}/releases"
+mkdir -p "${SCHEMAS}/fixed"
 
 # 生成输入方案
 gen_schema() {
@@ -115,7 +116,7 @@ gen_schema() {
     rsync -a --exclude='/code_*.txt' \
         --exclude='/玲珑.txt' \
         --exclude='/大竹_*.txt' \
-        --exclude='/跟打词提.txt' \
+        --exclude='/跟打词提*.txt' \
         --exclude='/linglong_*.txt' \
         --exclude='/div_ll.txt' \
         --exclude='/freq.txt' \
@@ -123,15 +124,22 @@ gen_schema() {
         --exclude='/ll_div.txt' \
         --exclude='/ll_map.txt' \
         --exclude='/ll_words.txt' \
+        --exclude='/pua2alias.txt' \
         "${LL}/" "${SCHEMAS}/ll/" || error "复制文件失败"
 
     # 打包发布
+    log "打包固词..."
+    cp "${LL}"/LL_linglong.*.dict.yaml "${SCHEMAS}"/fixed/
+    (cd "${SCHEMAS}" || error "无法切换到发布目录"
+        tar -cf - ./fixed | zstd -9 -T0 -c > "releases/固词更新-${REF_NAME}.tar.zst") || error "固词打包失败"
     log "打包发布文件..."
     (cd "${SCHEMAS}" || error "无法切换到发布目录"
         tar -cf - \
             --exclude="build" \
             --exclude="*userdb" \
             --exclude="sync" \
+            --exclude="荒乱单字.yaml" \
+            --exclude="离乱单字.yaml" \
             --exclude="*.custom.yaml" \
             --exclude="installation.yaml" \
             --exclude="user.yaml" \
@@ -139,7 +147,7 @@ gen_schema() {
             --exclude="weasel.yaml" \
             --exclude="LL.txt" \
             --exclude="大竹*.txt" \
-            --exclude="跟打词提.txt" \
+            --exclude="跟打词提*.txt" \
             --exclude="speed_stats.conf" \
             "./ll" | \
             zstd -9 -T0 -c \
@@ -150,6 +158,8 @@ gen_schema() {
             -x "build/**" \
             -x "*userdb*" \
             -x "sync/**" \
+            -x "荒乱单字.yaml" \
+            -x "离乱单字.yaml" \
             -x "*.custom.yaml" \
             -x "installation.yaml" \
             -x "user.yaml" \
@@ -157,7 +167,7 @@ gen_schema() {
             -x "weasel.yaml" \
             -x "LL.txt" \
             -x "大竹*.txt" \
-            -x "跟打词提.txt" \
+            -x "跟打词提*.txt" \
             -x "speed_stats.conf") || error "仓输入法包打包失败"
     )
     log "方案 ${NAME} 生成完成"
