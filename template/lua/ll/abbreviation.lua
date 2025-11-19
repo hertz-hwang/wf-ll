@@ -25,9 +25,9 @@ function this.func(key_event, env)
     return snow.kNoop
   end
   local length = utf8.len(selection.text)
-  if length >= 4 then
-    return snow.kNoop
-  end
+  --if length >= 4 then
+  --  return snow.kNoop
+  --end
   if key_event:release() or key_event:alt() or key_event:ctrl() or key_event:caps() then
     return snow.kNoop
   end

@@ -2,8 +2,8 @@
 # encoding: utf-8
 
 schema:
-  schema_id: &schema LL
-  name: 离乱
+  schema_id: LL_NC
+  name: 离乱(不上屏)【勿用】
   version: release
   author:
     - 荒
@@ -91,7 +91,23 @@ engine:
 speller:
   alphabet: qwertyuiopasdfghjkl;zxcvbnm,./]ZYXWVUTSRQPONMLKJIHGFEDCBA
   #delimiter: " `"
-  auto_select: true
+  #auto_select: true
+  #max_code_length: 4
+  #auto_clear: auto
+  #auto_select_pattern: ^w\w+
+  popping:
+    # 一键字
+    - match: "[ruo]"
+      accept: "[qwrtuoypasdfghjkl;zxcvbnm,./]"
+    # 快符
+    - match: "w[qwrtuoypasdfghjkl;zxcvbnm,./]"
+      accept: "[qwrtuoypasdfghjkl;zxcvbnm,./]"
+    # 单字
+    - match: "[qtypasdfghjkl;zxcvbnm,./]{1,3}[wruo]"
+      accept: "[qwrtuoypasdfghjkl;zxcvbnm,./]"
+    # 词组
+    - match: "[qtypasdfghjkl;zxcvbnm,./]{4}"
+      accept: "[qwrtuoypasdfghjkl;zxcvbnm,./]"
 
 fixed:
   __include: translator
@@ -118,8 +134,8 @@ fast:
   initial_quality: -1
 
 translator:
-  dictionary: *schema
-  prism: *schema
+  dictionary: LL
+  prism: LL
   #db_class: tabledb
   enable_completion: false
   enable_sentence: false
@@ -139,7 +155,7 @@ translator:
 # 拼音反查
 reverse_lookup:
   tag: reverse_lookup
-  dictionary: *schema
+  dictionary: LL
   prefix: "`"    # 反查引导符「`」
   tips: 【反查：拼音+超级笔画】
   closing_tips: 【反查关闭】
@@ -198,7 +214,7 @@ historyX:
   initial_quality: 10
 
 ll:
-  code: *schema
+  code: LL_NC
   tags: [ abc ]
   spelling:
     schema: *cf
