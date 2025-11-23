@@ -11,7 +11,6 @@
 # 每行格式：文字 <tab> 编码 <tab> 权重（权重越高，顺序越靠前）
 #
 # 示例：
-自定义词条示例	.vsy	0
 冰雪清韵	,lmb	0
 太强了	tql	3
 钛镪钌	tql	2
@@ -23,6 +22,11 @@
 丸辣	;fcq	0
 雷冖	lqpv	0
 天拆	hanl	0
+蓝落萧	ycyy	0
+蓝神	yvx,	0
+监洛肃	vmym	0
+玄简君	s/pl	0
+蛇巳礼码	jzxv	0
 
 Ciallo～(∠・ω< )⌒☆	Vcall	0
 Ciallo～(∠・ω< )⌒★	Vcall	0

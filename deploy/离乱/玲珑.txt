@@ -73,7 +73,6 @@
 而且	3164088
 很多	3161566
 希望	3129789
-研究	3060332
 可能	3012696
 那么	3005466
 然后	2975526
@@ -120,7 +119,6 @@
 只有	2433385
 一种	2424560
 不过	2421499
-行业	2396403
 相关	2395740
 城市	2379576
 安全	2375526
@@ -158,6 +156,7 @@
 环境	2073275
 认为	2068312
 世界	2063877
+研究	2060332
 所有	2050529
 标准	2050457
 拥有	2047390
@@ -247,6 +246,7 @@
 经过	1647095
 除了	1645993
 材料	1643499
+行业	1643403
 结果	1639394
 保持	1626264
 起来	1622789
@@ -43749,6 +43749,7 @@
 传至	9722
 自由市场	9722
 上轮	9722
+专户	9721
 恼羞成怒	9721
 瑶族	9720
 土里	9719
@@ -50142,6 +50143,7 @@
 费事	7823
 小吃店	7823
 皮肤癌	7823
+亚泰	7822
 倒转	7821
 眉间	7821
 交火	7821
@@ -57191,6 +57193,7 @@
 许多时候	6246
 罚没	6246
 秀水	6246
+京东方	6245
 一仗	6245
 左右逢源	6245
 挎包	6245
@@ -148424,6 +148427,7 @@
 素黑	392
 展子	392
 夜愿	392
+阴婚	391
 恍忽	391
 尽复	391
 练武之人	391
@@ -149382,6 +149386,7 @@
 某君	376
 粥品	376
 断生	375
+安世	375
 主仆二人	375
 泥胎	375
 仰脖	375
@@ -166014,6 +166019,8 @@
 一战成硕	164
 一锤子	164
 杂优	164
+九价疫苗	163
+九价HPV疫苗	163
 队正	163
 柳眉倒竖	163
 绝地天通	163
@@ -169676,6 +169683,7 @@
 勇往	132
 嘴遁	132
 尊府	132
+纶巾	131
 瞳孔一缩	131
 黑芒	131
 高门大户	131
@@ -171380,6 +171388,7 @@
 勇略	119
 禹都	119
 藏话	119
+预收费	118
 缩地成寸	118
 仙使	118
 几分薄面	118
@@ -184860,6 +184869,7 @@
 自由美利坚	41
 自由搏击	41
 资产处	41
+幅巾	40
 仙材	40
 坐蜡	40
 锐啸	40
@@ -193490,6 +193500,7 @@
 攒出	16
 做够	16
 组框	16
+赴陆	15
 瞳孔骤缩	15
 眼神微变	15
 面色一寒	15
@@ -209487,6 +209498,10 @@
 秒跟	0
 可仍	0
 音频怪物	0
+请输入文本	0
+请输入	0
+鲸凉鹤	0
+护至身前	0
 朱儁	0
 一而再，再而三	0
 说时迟，那时快	0
@@ -221717,7 +221732,6 @@ id劝退	0
 加以区别	0
 尽一切努力	0
 就业人口	0
-$ddcmd(　　　静夜思·李白\r\r床前明月光，疑是地上霜。\r举头望明月，低头思故乡。\r,『静夜思·李白』)	0
 记忆碎片	0
 精油推背	0
 加以提高	0
@@ -226549,88 +226563,6 @@ MVP结算页面	0
 你们不会	0
 你知道的	0
 牛屌	0
-……	0
-（10）	0
-$ddcmd(newkey(ofbd),bd\\2标点\\3、，。)	0
-$ddcmd(newkey(ofpp),pp\\2偏旁\\3亻彳讠)	0
-$ddcmd(newkey(ofdw),dw\\2单位\\3㎎㎏㎜)	0
-$ddcmd(newkey(ofpy),py\\2拼音\\3āōē)	0
-$ddcmd(newkey(ofjt),jt\\2箭头\\3←→↑)	0
-$ddcmd(newkey(ofyu),yu\\2圆圈数字\\3①②③)	0
-$ddcmd(newkey(ofku),ku\\2括号数字\\3⑴⑵⑶)	0
-$ddcmd(newkey(ofdu),du\\2点号数字\\3⒈⒉⒊)	0
-$ddcmd(newkey(ofvu),vu\\2中文数字\\3㈠㈡㈢)	0
-$ddcmd(newkey(ofld),ld\\2罗马大写\\3ⅠⅡⅢ)	0
-$ddcmd(newkey(oflx),lx\\2罗马小写\\3ⅰⅱⅲ)	0
-$ddcmd(newkey(ofub),ub\\2上标\\3¹²³)	0
-$ddcmd(newkey(ofxb),xb\\2下标\\3₁₂₃)	0
-$ddcmd(newkey(oftu),tu\\2特殊符号\\3℃°‰)	0
-$ddcmd(newkey(ofux),ux\\2数学符号\\3＋－＜)	0
-$ddcmd(newkey(ofhb),hb\\2货币符号\\3€＄￠)	0
-$ddcmd(newkey(ofvb),vb\\2制表符号\\3┌└┐)	0
-$ddcmd(newkey(ofvy),vy\\2注音符号\\3ㄅㄆㄇ)	0
-$ddcmd(newkey(ofxd),xd\\2希腊大写\\3ΑΒΓ)	0
-$ddcmd(newkey(ofxx),xx\\2希腊小写\\3αβγ)	0
-$ddcmd(newkey(ofed),ed\\2俄文大写\\3АБВ)	0
-$ddcmd(newkey(ofex),ex\\2俄文小写\\3абв)	0
-$ddcmd(newkey(ofrd),rd\\2日文大写\\3ァアィ)	0
-。”	0
-：“	0
-@163.com	0
-@gmail.com	0
-@qq.com	0
-@126.com	0
-——	0
-OK	0
-👌🏻	0
-$ddcmd(convert(繁体输出,切换),[简繁切换])	0
-！！	0
-！？	0
-？！	0
-？？	0
-$ddcmd(set([-IME设置-],隐藏候选窗口=切换),[显隐候选窗])	0
-$ddcmd(convert(全半角,切换),[全半角切换])	0
-$ddcmd(newkey(ofxb),b\\2下标\\3₁₂₃)	0
-$ddcmd(newkey(ofxd),d\\2希腊大写\\3ΑΒΓ)	0
-$ddcmd(newkey(ofxx),x\\2希腊小写\\3αβγ)	0
-$ddcmd(newkey(ofbd),d\\2标点\\3、，。)	0
-$ddcmd(newkey(ofpp),p\\2偏旁\\3亻彳讠)	0
-$ddcmd(newkey(ofpy),y\\2拼音\\3āōē)	0
-$ddcmd(newkey(ofdw),w\\2单位\\3㎎㎏㎜)	0
-$ddcmd(newkey(ofdu),u\\2点号数字\\3⒈⒉⒊)	0
-$ddcmd(newkey(ofjt),t\\2箭头\\3←→↑)	0
-$ddcmd(newkey(ofyu),u\\2圆圈数字\\3①②③)	0
-$ddcmd(newkey(ofku),u\\2括号数字\\3⑴⑵⑶)	0
-$ddcmd(newkey(ofvu),u\\2中文数字\\3㈠㈡㈢)	0
-$ddcmd(newkey(ofvb),b\\2制表符号\\3┌└┐)	0
-$ddcmd(newkey(ofvy),y\\2注音符号\\3ㄅㄆㄇ)	0
-$ddcmd(newkey(ofld),d\\2罗马大写\\3ⅠⅡⅢ)	0
-$ddcmd(newkey(oflx),x\\2罗马小写\\3ⅰⅱⅲ)	0
-$ddcmd(newkey(ofub),b\\2上标\\3¹²³)	0
-$ddcmd(newkey(ofux),x\\2数学符号\\3＋－＜)	0
-$ddcmd(newkey(oftu),u\\2特殊符号\\3℃°‰)	0
-$ddcmd(newkey(ofhb),b\\2货币符号\\3€＄￠)	0
-$ddcmd(newkey(ofed),d\\2俄文大写\\3АБВ)	0
-$ddcmd(newkey(ofex),x\\2俄文小写\\3абв)	0
-$ddcmd(newkey(ofrd),d\\2日文大写\\3ァアィ)	0
-$ddcmd(newkey(ofrx),x\\2日文小写\\3ぁあぃ)	0
-$ddcmd(config(/do gaojishezhi),[高级设置])	0
-$ddcmd(config(/do 在线加词),[加词])	0
-$ddcmd(config(/do 码表),[码表项])	0
-$ddcmd(config(/do 剪贴板反查),[复制反查])	0
-$ddcmd(<date.yyyy>年<date.m>月<date.d>日, <date.yyyy>年<date.m>月<date.d>日)	0
-$ddcmd(<date.yyyy>-<date.mm>-<date.dd>, <date.yyyy>-<date.mm>-<date.dd>)	0
-$ddcmd(<time.h>:<time.mm> <date.Z>, <time.h>:<time.mm> <date.Z>)	0
-$ddcmd(config(/do 界面),[界面项])	0
-$ddcmd(config(/do anjianshezhi),[按键定义])	0
-$ddcmd(config(/do 高级),[高级项])	0
-$ddcmd(config(/do about),[关于项])	0
-$ddcmd(config(/do shuchufancha),[输出反查])	0
-”“	0
-？”	0
-“”	0
-！”	0
-！！！	0
 偶尔发生	0
 偶尔发现	0
 偶尔出去	0
@@ -226671,8 +226603,6 @@ nm	0
 ☽☾	0
 呕吐不止	0
 欧式几何	0
-$ddcmd(newkey(ofrx),rx\\2日文小写\\3ぁあぃ)	0
-\\	0
 欧洲进口	0
 欧美风情	0
 偶然地	0
@@ -229920,7 +229850,6 @@ san值狂掉	0
 所以知道	0
 三长一短选最短	0
 三长一短	0
-$ddcmd(<date.yyyy>-<date.mm>-<date.dd> <time.h>:<time.mm> <date.Z>, <date.yyyy>-<date.mm>-<date.dd> <time.h>:<time.mm> <date.Z>)	0
 赛后采访	0
 三大金刚	0
 送米	0
