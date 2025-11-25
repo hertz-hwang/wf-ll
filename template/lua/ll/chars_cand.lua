@@ -9,6 +9,7 @@ Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
 ---------------------------------------------------------------------------
 更新[by Flauver]:
 - 20251026: fix bugs.
+- 20251125: Adapt the "元书".
 
 Usage:
 (1) Place this lua file in the lua directory
@@ -20,329 +21,297 @@ Usage:
       reset: 1 
 ]]
 
--- ==================== CONFIGURATION CONSTANTS ====================
-local DB_KEY_PREFIX = string.char(1) .. "config/"
-local DB_USER_FILE_HASH_KEY = "user_config_hash"
-local PRESET_DATA_FILE = "lua/chars_cand/preset_data.txt"
-local USER_DATA_FILE = "lua/chars_cand/user_data.txt"
+local bit = (function()
+    local bit_ok, bit_ = pcall(require, "bit")
+    local bit32_ok, bit32_ = pcall(require, "bit32")
+    
+    local bit53_ = nil
+    local load_func = load or loadstring
+    if load_func then
+        local bit53_func = load_func("return {bxor = function(a, b) return a ~ b end, band = function(a, b) return a & b end}")
+        if bit53_func then bit53_ = bit53_func() end
+    end
 
--- ==================== CORE MODULE DEFINITION ====================
-local core_module = {
-    PROCESS_RESULTS = {
-        rejected = 0,
-        accepted = 1, 
-        no_operation = 2,
-    }
+    local bit = {}
+    function bit.bxor(a, b)
+        if bit_ok then return bit_.bxor(a, b)
+        elseif bit32_ok then return bit32_.bxor(a, b)
+        elseif bit53_ then return bit53_.bxor(a, b) end
+
+        local p, c = 1, 0
+        while a > 0 and b > 0 do
+            local ra, rb = a % 2, b % 2
+            if ra ~= rb then c = c + p end
+            a, b, p = (a - ra) / 2, (b - rb) / 2, p * 2
+        end
+        return c
+    end
+
+    function bit.band(a, b)
+        if bit_ok then return bit_.band(a, b)
+        elseif bit32_ok then return bit32_.band(a, b)
+        elseif bit53_ then return bit53_.band(a, b) end
+        local p, c = 1, 0
+        while a > 0 and b > 0 do
+            local ra, rb = a % 2, b % 2
+            if ra + rb > 1 then c = c + p end
+            a, b, p = (a - ra) / 2, (b - rb) / 2, p * 2
+        end
+        return c
+    end
+    return bit
+end)()
+
+local userdb = (function()
+    local META_KEY_PREFIX = "\001" .. "/"
+    local db_pool = setmetatable({}, { __mode = "v" })
+
+    local extends = {}
+    function extends:meta_fetch(key) return self._db:fetch(META_KEY_PREFIX .. key) end
+    function extends:meta_update(key, value) return self._db:update(META_KEY_PREFIX .. key, value) end
+    function extends:empty()
+        local da = self._db:query("")
+        if da then for key, _ in da:iter() do self._db:erase(key) end end
+    end
+
+    local mt = { __index = function(wrapper, key)
+        if extends[key] then return extends[key] end
+        local real_db = wrapper._db
+        local value = real_db[key]
+        if type(value) == "function" then return function(_, ...) return value(real_db, ...) end end
+        return value
+    end}
+
+    local userdb = {}
+    function userdb.LevelDb(db_name)
+        local key = db_name .. ".userdb"
+        local db = db_pool[key] or UserDb(db_name, "userdb")
+        db_pool[key] = db
+        return setmetatable({_db = db}, mt)
+    end
+    return userdb
+end)()
+
+local chars_cand = {
+    version = "v13.3.17",
+    RIME_PROCESS_RESULTS = { kRejected = 0, kAccepted = 1, kNoop = 2 }
 }
 
--- ==================== FILE SYSTEM UTILITIES ====================
-function core_module.check_file_exists(file_path)
-    local file_handle = io.open(file_path, "r")
-    if file_handle then
-        file_handle:close()
-        return true
-    end
+function chars_cand.file_exists(filename)
+    local f = io.open(filename, "r")
+    if f then io.close(f); return true end
     return false
 end
 
-function core_module.resolve_file_path(relative_path)
-    local normalized_path = relative_path:gsub("^/+", "")
-    
-    -- User data directory (priority)
-    local user_dir_path = rime_api.get_user_data_dir() .. '/' .. normalized_path
-    if core_module.check_file_exists(user_dir_path) then
-        return user_dir_path
-    end
-    
-    -- Shared data directory (fallback)
-    local system_dir_path = rime_api.get_shared_data_dir() .. '/' .. normalized_path
-    if core_module.check_file_exists(system_dir_path) then
-        return system_dir_path
-    end
-    
+function chars_cand.get_filename_with_fallback(filename)
+    local _path = filename:gsub("^/+", "")
+    local user_path = rime_api.get_user_data_dir() .. '/' .. _path
+    if chars_cand.file_exists(user_path) then return user_path end
+    local shared_path = rime_api.get_shared_data_dir() .. '/' .. _path
+    if chars_cand.file_exists(shared_path) then return shared_path end
     return nil
 end
 
--- ==================== DATA STORAGE MANAGER ====================
-local data_manager = {
-    db_instance = nil
-}
-
-function data_manager.cleanup()
-    if data_manager.db_instance and data_manager.db_instance:loaded() then
-        collectgarbage()
-        local cleanup_result = data_manager.db_instance:close()
-        data_manager.db_instance = nil
-        return cleanup_result
-    end
-    return true
+function chars_cand.is_function_mode_active(context)
+    if not context or not context.composition or context.composition:empty() then return false end
+    local seg = context.composition:back()
+    if not seg then return false end
+    return seg:has_tag("number") or seg:has_tag("unicode") or 
+           seg:has_tag("calculator") or seg:has_tag("shijian") or seg:has_tag("Ndate")
 end
 
-function data_manager.get_connection(require_write)
-    if data_manager.db_instance == nil then 
-        data_manager.db_instance = LevelDb("lua/chars_cand") 
-    end
+local candidate_db = userdb.LevelDb("lua/chars_cand")
 
-    local is_connected = data_manager.db_instance:loaded()
-    local need_reconnect = false
+local function calculate_file_hash(filepath)
+    local file = io.open(filepath, "rb")
+    if not file then return nil end
 
-    if is_connected and require_write and data_manager.db_instance.read_only then
-        need_reconnect = true
-    elseif not is_connected then
-        need_reconnect = true
-    end
-
-    if need_reconnect then
-        if is_connected then data_manager.db_instance:close() end
-        if require_write then
-            data_manager.db_instance:open()
-        else
-            data_manager.db_instance:open_read_only()
-        end
-    end
-
-    return data_manager.db_instance
-end
-
--- CRUD Operations
-function data_manager.retrieve(key)
-    return data_manager.get_connection():fetch(key)
-end
-
-function data_manager.store(key, value)
-    return data_manager.get_connection(true):update(key, value)
-end
-
-function data_manager.clear_all()
-    local db_conn = data_manager.get_connection(true)
-    local data_iterator = db_conn:query("")
-    for key, _ in data_iterator:iter() do
-        db_conn:erase(key)
-    end
-    data_iterator = nil
-end
-
--- Metadata Management
-function data_manager.get_metadata(key)
-    return data_manager.retrieve(DB_KEY_PREFIX .. key)
-end
-
-function data_manager.set_metadata(key, value)
-    return data_manager.store(DB_KEY_PREFIX .. key, value)
-end
-
-function data_manager.get_user_file_hash()
-    return data_manager.get_metadata(DB_USER_FILE_HASH_KEY)
-end
-
-function data_manager.set_user_file_hash(hash_value)
-    return data_manager.set_metadata(DB_USER_FILE_HASH_KEY, hash_value)
-end
-
--- ==================== DATA INITIALIZATION SYSTEM ====================
-local function create_directory_if_needed(dir_path)
-    local path_separator = package.config:sub(1, 1)
-    dir_path = dir_path:gsub([["]], [[\"]])
+    local FNV_OFFSET_BASIS = 0x811C9DC5
+    local FNV_PRIME = 0x01000193
+    local hash = FNV_OFFSET_BASIS
     
-    if path_separator == "/" then
-        local command = 'mkdir -p "' .. dir_path .. '" 2>/dev/null'
-        os.execute(command)
-    end
-end
-
-local function compute_file_signature(file_path)
-    local file_handle = io.open(file_path, "rb")
-    if not file_handle then return nil end
-
-    local HASH_BASE = 0x811C9DC5
-    local HASH_MULTIPLIER = 0x01000193
-
-    -- Bitwise operations (optimized for performance)
-    local xor_op, and_op
-    if jit and jit.version then
-        local bit_ops = require("bit")
-        xor_op = bit_ops.bxor
-        and_op = bit_ops.band
-    else
-        xor_op = function(a, b)
-            local result, bit_pos = 0, 1
-            while a > 0 or b > 0 do
-                if a % 2 ~= b % 2 then result = result + bit_pos end
-                a, b = math.floor(a/2), math.floor(b/2)
-                bit_pos = bit_pos * 2
-            end
-            return result
-        end
-        and_op = function(a, b)
-            local result, bit_pos = 0, 1
-            while a > 0 and b > 0 do
-                if a % 2 == 1 and b % 2 == 1 then result = result + bit_pos end
-                a, b = math.floor(a/2), math.floor(b/2)
-                bit_pos = bit_pos * 2
-            end
-            return result
-        end
-    end
-
-    local signature = HASH_BASE
     while true do
-        local data_chunk = file_handle:read(4096)
-        if not data_chunk then break end
-        
-        for i = 1, #data_chunk do
-            local byte_value = string.byte(data_chunk, i)
-            signature = xor_op(signature, byte_value)
-            signature = (signature * HASH_MULTIPLIER) % 0x100000000
-            signature = and_op(signature, 0xFFFFFFFF)
+        local chunk = file:read(4096)
+        if not chunk then break end
+        for i = 1, #chunk do
+            local byte = string.byte(chunk, i)
+            hash = bit.bxor(hash, byte)
+            hash = (hash * FNV_PRIME) % 0x100000000
+            hash = bit.band(hash, 0xFFFFFFFF)
         end
     end
 
-    file_handle:close()
-    return string.format("%08x", signature)
+    file:close()
+    return string.format("%08x", hash)
 end
 
-local function sync_database_from_file(file_path)
-    local file_handle = io.open(file_path, "r")
-    if not file_handle then return end
+local candidate_data = {}
+candidate_data.status = "pending"
+candidate_data.disabled_types = {}
+candidate_data.preset_file_path = chars_cand.get_filename_with_fallback("lua/chars_cand/preset_data.txt")
+candidate_data.user_override_path = rime_api.get_user_data_dir() .. "/lua/chars_cand/user_data.txt"
 
-    for data_line in file_handle:lines() do
-        local content, identifier = data_line:match("([^\t]+)\t([^\t]+)")
-        if content and identifier then
-            data_manager.store(identifier, content)
-        end
-    end
-    file_handle:close()
-end
-
-local function initialize_data_system()
-    -- Check if user data file has changed
-    local user_file_path = rime_api.get_user_data_dir() .. "/" .. USER_DATA_FILE
-    local current_file_hash = compute_file_signature(user_file_path)
-    local user_data_changed = current_file_hash and 
-                             current_file_hash ~= data_manager.get_user_file_hash()
-
-    if not user_data_changed then return end
-
-    -- Reload data
-    data_manager.clear_all()
-    data_manager.set_user_file_hash(current_file_hash or "")
-
-    -- Load data files (user data overrides preset)
-    local preset_file_path = core_module.resolve_file_path(PRESET_DATA_FILE)
-    if preset_file_path then sync_database_from_file(preset_file_path) end
-    sync_database_from_file(user_file_path)
-
-    data_manager.cleanup()
-end
-
--- ==================== HINT PROCESSING ENGINE ====================
-local processing_env = {
-    current_hint = nil,
-    previous_prompt = "",
-    update_handler = nil
+local META_KEY = {
+    version = "chars_cand_version",
+    user_file_hash = "user_candidate_file_hash",
+    disabled_types = "disabled_types",
 }
 
-local function find_hint_content(primary_key, fallback_key)
-    if not primary_key or primary_key == "" then return nil end
-    
-    local hint_content = data_manager.retrieve(primary_key)
-    if hint_content and #hint_content > 0 then
-        return hint_content
-    end
-    
-    return fallback_key and data_manager.retrieve(fallback_key) or nil
+function candidate_data.is_disabled(candidate)
+    local type = candidate:match("^(..-):") or candidate:match("^(..-)：")
+    if not type then return false end
+    return candidate_data.disabled_types[type] == true
 end
 
-local function refresh_hint_display(context, env)
-    local current_segment = context.composition:back()
-    if not current_segment then return end
+function candidate_data.init_db_from_file(path)
+    local file = io.open(path, "r")
+    if not file then return end
 
-    local selected_item = context:get_selected_candidate() or {}
-    
-    -- Determine hint content based on selection state
-    if current_segment.selected_index == 0 then
-        env.current_hint = find_hint_content(context.input, selected_item.text)
+    for line in file:lines() do
+        local value, key = line:match("([^\t]+)\t([^\t]+)")
+        if key and value and not candidate_data.is_disabled(value) then
+            candidate_db:update(key, value)
+        end
+    end
+    file:close()
+end
+
+function candidate_data.ensure_dir_exist(dir)
+    local sep = package.config:sub(1, 1)
+    dir = dir:gsub([["]], [[\"]])
+    if sep == "/" then os.execute('mkdir -p "' .. dir .. '" 2>/dev/null') end
+end
+
+function candidate_data.init(config)
+    if candidate_data.status ~= "pending" then return end
+
+    local dist = rime_api.get_distribution_code_name() or ""
+    local user_lua_dir = rime_api.get_user_data_dir() .. "/lua"
+    if dist ~= "hamster" and dist ~= "hamster3" and dist ~= "Weasel" then
+        candidate_data.ensure_dir_exist(user_lua_dir)
+        candidate_data.ensure_dir_exist(user_lua_dir .. "/chars_cand")
+    end
+
+    local disabled_types_list = config:get_list("chars_cand/disabled_types")
+    if disabled_types_list then
+        for i = 1, disabled_types_list.size do
+            local item = disabled_types_list:get_value_at(i - 1)
+            if item and #item.value > 0 then
+                candidate_data.disabled_types[item.value] = true
+            end
+        end
+    end
+
+    candidate_db:open()
+    local needs_rebuild = false
+
+    if candidate_db:meta_fetch(META_KEY.version) ~= chars_cand.version then
+        needs_rebuild = true
+    end
+
+    local user_file_hash = calculate_file_hash(candidate_data.user_override_path) or ""
+    if not needs_rebuild and (candidate_db:meta_fetch(META_KEY.user_file_hash) or "") ~= user_file_hash then
+        needs_rebuild = true
+    end
+
+    local disabled_keys = {}
+    for k, _ in pairs(candidate_data.disabled_types) do table.insert(disabled_keys, k) end
+    table.sort(disabled_keys)
+    local disabled_types_str = table.concat(disabled_keys, ",")
+
+    if not needs_rebuild and (candidate_db:meta_fetch(META_KEY.disabled_types) or "") ~= disabled_types_str then
+        needs_rebuild = true
+    end
+
+    if needs_rebuild then
+        candidate_db:empty()
+        candidate_data.init_db_from_file(candidate_data.preset_file_path)
+        candidate_data.init_db_from_file(candidate_data.user_override_path)
+        candidate_db:meta_update(META_KEY.version, chars_cand.version)
+        candidate_db:meta_update(META_KEY.user_file_hash, user_file_hash)
+        candidate_db:meta_update(META_KEY.disabled_types, disabled_types_str)
+    end
+
+    candidate_db:close()
+    candidate_db:open_read_only()
+end
+
+function candidate_data.get_candidate(keys)
+    if type(keys) == 'string' then keys = { keys } end
+    for _, key in ipairs(keys) do
+        if key and key ~= "" then
+            local candidate = candidate_db:fetch(key)
+            if candidate and #candidate > 0 then return candidate end
+        end
+    end
+    return nil
+end
+
+local function update_candidate_prompt(context, env)
+    env.current_candidate = nil
+    local is_candidate_enabled = context:get_option("chars_cand")
+    if not is_candidate_enabled then return end
+
+    local segment = context.composition:back()
+    if not segment then return end
+
+    local cand = context:get_selected_candidate() or {}
+    if segment.selected_index == 0 then
+        env.current_candidate = candidate_data.get_candidate({ context.input, cand.text })
     else
-        env.current_hint = find_hint_content(selected_item.text)
+        env.current_candidate = candidate_data.get_candidate(cand.text)
     end
 
-    -- Update prompt display
-    if env.current_hint and env.current_hint ~= "" then
-        current_segment.prompt = "【" .. env.current_hint .. "】"
-        env.previous_prompt = current_segment.prompt
-    elseif current_segment.prompt ~= "" and env.previous_prompt == current_segment.prompt then
-        current_segment.prompt = ""
-        env.previous_prompt = current_segment.prompt
+    if env.current_candidate ~= nil and env.current_candidate ~= "" then
+        segment.prompt = "〔" .. env.current_candidate .. "〕"
+        env.last_prompt = segment.prompt
+    elseif segment.prompt ~= "" and env.last_prompt == segment.prompt then
+        segment.prompt = ""
+        env.last_prompt = segment.prompt
     end
 end
 
--- ==================== MAIN PROCESSOR ====================
-local MainProcessor = {
-    activation_key = nil
-}
+local P = {}
 
-function MainProcessor.init(env)
-    -- Platform-specific directory setup
-    local platform = rime_api.get_distribution_code_name() or ""
-    local user_lua_path = rime_api.get_user_data_dir() .. "/lua"
-    
-    if platform ~= "hamster" and platform ~= "Weasel" then
-        create_directory_if_needed(user_lua_path)
-        create_directory_if_needed(user_lua_path .. "/chars_cand")
+function P.init(env)
+    local config = env.engine.schema.config
+    candidate_data.init(config)
+    P.candidate_key = config:get_string("key_binder/candidate_key")
+
+    env.candidate_update_connection = env.engine.context.update_notifier:connect(
+        function(context) update_candidate_prompt(context, env) end
+    )
+end
+
+function P.fini(env)
+    if env.candidate_update_connection then
+        env.candidate_update_connection:disconnect()
+        env.candidate_update_connection = nil
     end
+end
 
-    -- Initialize data system
-    initialize_data_system()
-
-    -- Get configuration
-    MainProcessor.activation_key = env.engine.schema.config:get_string("key_binder/tips_key")
-
-    -- Set up context update listener
+function P.func(key, env)
     local context = env.engine.context
-    env.update_handler = context.update_notifier:connect(function(ctx)
-        if ctx:get_option("chars_cand") then
-            refresh_hint_display(ctx, env)
-        end
-    end)
+    local is_candidate_enabled = context:get_option("chars_cand")
+    if not is_candidate_enabled then return chars_cand.RIME_PROCESS_RESULTS.kNoop end
+
+    local segment = context.composition:back()
+    if segment and segment:has_tag("paging") then update_candidate_prompt(context, env) end
+
+    if not P.candidate_key or P.candidate_key ~= key:repr() or 
+       chars_cand.is_function_mode_active(context) or 
+       not env.current_candidate or env.current_candidate == "" then
+        return chars_cand.RIME_PROCESS_RESULTS.kNoop
+    end
+
+    local commit_txt = env.current_candidate:match("：%s*(.*)%s*") or env.current_candidate:match(":%s*(.*)%s*")
+    if commit_txt and #commit_txt > 0 then
+        env.engine:commit_text(commit_txt)
+        context:clear()
+        return chars_cand.RIME_PROCESS_RESULTS.kAccepted
+    end
+
+    return chars_cand.RIME_PROCESS_RESULTS.kNoop
 end
 
-function MainProcessor.fini(env)
-    data_manager.cleanup()
-    if env.update_handler then
-        env.update_handler:disconnect()
-        env.update_handler = nil
-    end
-end
-
-function MainProcessor.func(key, env)
-    local context = env.engine.context
-    local current_segment = context.composition:back()
-    
-    -- Early exit conditions
-    if not context:get_option("chars_cand") or not current_segment then
-        return core_module.PROCESS_RESULTS.no_operation
-    end
-
-    -- Update hints during paging
-    if current_segment:has_tag("paging") then
-        refresh_hint_display(context, env)
-    end
-
-    -- Handle activation key
-    if MainProcessor.activation_key and 
-       MainProcessor.activation_key == key:repr() and
-       env.current_hint and env.current_hint ~= "" then
-        
-        local commit_text = env.current_hint:match("：%s*(.*)%s*") or
-                          env.current_hint:match(":%s*(.*)%s*")
-        if commit_text and #commit_text > 0 then
-            env.engine:commit_text(commit_text)
-            context:clear()
-            return core_module.PROCESS_RESULTS.accepted
-        end
-    end
-
-    return core_module.PROCESS_RESULTS.no_operation
-end
-
-return MainProcessor
+return P
