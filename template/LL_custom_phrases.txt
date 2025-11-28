@@ -26,6 +26,8 @@
 蓝神	yvx,	0
 监洛肃	vmym	0
 玄简君	s/pl	0
+夢澤閑客	ymb,	0
+梦泽闲客	fmd,	0
 蛇巳礼码	jzxv	0
 猛码	yavb	0
 
