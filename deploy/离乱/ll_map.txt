@@ -207,6 +207,7 @@ ztu	欠
 yxo	中
 yxo	𘯉
 c;o	目
+c;o	
 xfu	彳
 lqu	卩
 lqu	㔾
@@ -473,7 +474,6 @@ yqr	⺃
 ,jr	㠯
 ,jr	
 ,jr	𮍌
-,jr	
 fjw	比
 fjw	
 hqo	皮
