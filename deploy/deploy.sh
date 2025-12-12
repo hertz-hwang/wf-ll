@@ -92,8 +92,8 @@ gen_schema() {
         -L "${LL}/玲珑.txt" \
         -f "${LL}/freq.txt" \
         -l "1:4,2:4,3:0,4:0" \
-        -ll "1:4,2:4,3:4,4:0" \
-        -wL "1:0,2:10,3:10,4:0" \
+        -ll "1:1,2:1,3:1,4:0" \
+        -wL "1:3,2:10,3:10,4:0" \
         -u "${LL}/code_chars_full.txt" \
         -s "${LL}/code_chars_simp.txt" \
         -W "${LL}/code_words_full.txt" \
